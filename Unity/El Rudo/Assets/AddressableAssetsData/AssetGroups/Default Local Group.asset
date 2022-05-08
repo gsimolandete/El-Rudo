@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: dd1fa0c698c04e542b2c79d6f47db20b
+  m_SerializeEntries:
+  - m_GUID: ebea5f8b8163f9a4ab9d9a1b45444e28
+    m_Address: Assets/AssetStore/Wizard - 2D Character/Wizard.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a22ddbf6cbcbf1f44820f4655baa4a04
+    m_Address: Assets/TestAssets/Weapons/sword_01.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 50b70ca8f9259b548880ba33d59b9877, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6f9a9f2ad55785a4c93503ba454a7e0f, type: 2}
+    - {fileID: 11400000, guid: 9bcf59b4fc301fb4a89686bf35848536, type: 2}

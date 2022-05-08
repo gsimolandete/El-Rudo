@@ -2,19 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LoadMiniRudoDisplay : MonoBehaviour
 {
     [SerializeField]
-    TMP_Text name, elo, vitality, strength, agility, velocity;
+    public TMP_Text name, elo, vitality, strength, agility, velocity;
+    [SerializeField]
+    Button buttonToRudoProfile;
 
-    public void Initialize(Rudo abstractRudo)
+    public void InitializeMini(Rudo rudo, CustomMainMenuScript customMainMenuScript, GameObject menu)
     {
-        name.text = abstractRudo.FighterName;
+        name.text = rudo.FighterName;
         elo.text = "0";
-        vitality.text = abstractRudo.Vitality.ToString();
-        strength.text = abstractRudo.Strength.ToString();
-        agility.text = abstractRudo.Agility.ToString();
-        velocity.text = abstractRudo.Velocity.ToString();
+        vitality.text = rudo.Vitality.ToString();
+        strength.text = rudo.Strength.ToString();
+        agility.text = rudo.Agility.ToString();
+        velocity.text = rudo.Velocity.ToString();
+
+        buttonToRudoProfile.onClick.AddListener( delegate { customMainMenuScript.NavigateTo(menu); menu.GetComponent<RudoViewerScript>().InitializeBig(rudo); });
     }
 }

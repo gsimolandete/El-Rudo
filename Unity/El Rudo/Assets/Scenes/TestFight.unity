@@ -1749,20 +1749,8 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 222747333}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  m_IsOn: 0
+      m_Calls: []
+  m_IsOn: 1
 --- !u!1 &301797363
 GameObject:
   m_ObjectHideFlags: 0
@@ -6866,7 +6854,6 @@ GameObject:
   - component: {fileID: 1849513796}
   - component: {fileID: 1849513798}
   - component: {fileID: 1849513795}
-  - component: {fileID: 1849513799}
   m_Layer: 0
   m_Name: GAMEXD
   m_TagString: Untagged
@@ -6913,7 +6900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomSeed: 1
   showLogs: 1
-  seed: 1378092765
+  seed: 53879071
   abstractRudo1:
     fighterName: rudo1
     vitality: 5
@@ -6937,18 +6924,18 @@ MonoBehaviour:
   dv:
     team1NumberTurns: 0
     team2NumberTurns: 0
-    team1NumberAnticipate: 1
-    team2NumberAnticipate: 0
-    team1NumberCounterAttack: 1
-    team2NumberCounterAttack: 1
-    team1NumberEvasion: 3
-    team2NumberEvasion: 1
-    team1NumberBlock: 0
-    team2NumberBlock: 2
+    team1NumberAnticipate: 7
+    team2NumberAnticipate: 3
+    team1NumberCounterAttack: 9
+    team2NumberCounterAttack: 4
+    team1NumberEvasion: 6
+    team2NumberEvasion: 5
+    team1NumberBlock: 3
+    team2NumberBlock: 4
     team1NumberYieldWeapon: 0
     team2NumberYieldWeapon: 0
-    team1NumberAttacks: 6
-    team2NumberAttacks: 5
+    team1NumberAttacks: 37
+    team2NumberAttacks: 39
 --- !u!4 &1849513797
 Transform:
   m_ObjectHideFlags: 0
@@ -6977,7 +6964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomSeed: 1
   showLogs: 0
-  seed: 1255247631
+  seed: 2096754427
   abstractRudo1:
     fighterName: erebo2000
     vitality: 20
@@ -7013,31 +7000,19 @@ MonoBehaviour:
   dv:
     team1NumberTurns: 0
     team2NumberTurns: 0
-    team1NumberAnticipate: 39197
-    team2NumberAnticipate: 38743
-    team1NumberCounterAttack: 62033
-    team2NumberCounterAttack: 61645
-    team1NumberEvasion: 46107
-    team2NumberEvasion: 45949
-    team1NumberBlock: 52224
-    team2NumberBlock: 52148
-    team1NumberYieldWeapon: 57426
-    team2NumberYieldWeapon: 57295
-    team1NumberAttacks: 307005
-    team2NumberAttacks: 309414
+    team1NumberAnticipate: 39140
+    team2NumberAnticipate: 38900
+    team1NumberCounterAttack: 61886
+    team2NumberCounterAttack: 61575
+    team1NumberEvasion: 45942
+    team2NumberEvasion: 46032
+    team1NumberBlock: 52389
+    team2NumberBlock: 52012
+    team1NumberYieldWeapon: 57404
+    team2NumberYieldWeapon: 57141
+    team1NumberAttacks: 306615
+    team2NumberAttacks: 309189
   combatIterations: 40000
---- !u!114 &1849513799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1849513794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ef55cd2dc11b5a43a721fb4f812f5a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1881525771
 GameObject:
   m_ObjectHideFlags: 0

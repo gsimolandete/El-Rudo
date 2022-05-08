@@ -5226,8 +5226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9be723312ef73348a28ad3db81cd769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addressInput: {fileID: 1302447404}
-  mintNameInput: {fileID: 735077522}
   LoadMiniRudoDisplay:
   - {fileID: 6056688490382846494}
   - {fileID: 652762360}
@@ -8488,7 +8486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1984086375
 RectTransform:
   m_ObjectHideFlags: 0

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8212320376ef841bb08873fc46fae1, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  rarity: 0
-  strengthRatio: 0.1
+  Equipable:
+    nftId: 0
+    equipableId: 0
+    quality: 0
+    pathToAddressable: Assets/TestAssets/Weapons/sword_01.prefab
+  strengthRatio: 1
   initiative: 0
   multiHit: 0
   counterattack: 0
@@ -25,5 +29,5 @@ MonoBehaviour:
   precision: 0
   accuracy: 0
   weaponType: 0
-  attackDistance: 0
+  attackDistance: 2
   block_DamagePercent: 0

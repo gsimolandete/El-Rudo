@@ -2,13 +2,12 @@ Moralis.Cloud.beforeSave("NewRudo", (request) => {
     logger.info("Handle NewRudo");
     
     const confirmed = request.object.get("confirmed");
-    if(!confirmed) {
-        logger.info("not confirmed");
+    if(confirmed) {
+        logger.info("transaction confirmed");
         return;
     }
-    logger.info("confirmed, proceding...");
 
-    const Rudo = Moralis.Object.extend("Rudo");
+    const Rudo = Moralis.Object.extend("RudoMoralis");
     const rudo = new Rudo();
     const rudoId = parseInt(request.object.get("uid"));
     rudo.set("rudoId", rudoId);
@@ -21,7 +20,6 @@ Moralis.Cloud.beforeSave("NewRudo", (request) => {
     rudo.set("velocity", parseInt(request.object.get("velocity")));
     rudo.set("elo", 0);
     rudo.set("experience", 0);
-    rudo.add("nextSkills",[[2,[0,0,0,0]],[2,[0,0,0,0]],[2,[0,0,0,0]]]);
     
     rudo.save().then((rudo) => {
         logger.info('New object created with objectId: ' + rudo.id);
@@ -29,5 +27,6 @@ Moralis.Cloud.beforeSave("NewRudo", (request) => {
         SetNext3Skills(rudoId);
     }, (error) => {
         logger.info('Failed to create new object, with error code: ' + error.message) ;
+        SaveFailedTransaction(request);
   });
 })

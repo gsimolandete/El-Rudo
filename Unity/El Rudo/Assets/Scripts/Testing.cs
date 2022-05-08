@@ -4,30 +4,36 @@ using System.Threading;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Moralis.Web3Api.Models;
+using MoralisWeb3ApiSdk;
+using static GlobalVariables;
+using Moralis.Platform.Queries;
+using Moralis.Platform.Objects;
+using System.Threading.Tasks;
 
 public class Testing : MonoBehaviour
 {
-    public CombatDynamics combatDynamics;
-    public TMP_InputField rudo1name, rudo1vitality, rudo1strength, rudo1agility, rudo1velocity;
-    public TMP_InputField rudo2name, rudo2vitality, rudo2strength, rudo2agility, rudo2velocity;
-    public TMP_InputField seed;
-    public Toggle randomSeed;
-
+    int i;
     public void test1()
     {
-#if !UNITY_EDITOR
-        DebugStuff.DebugLogsTest.myLog = "";
-#endif
+        NextMove();
+    }
+    IEnumerator NextMove()
+    {
+        print("next move iteration " + i);
 
-        combatDynamics.randomSeed = randomSeed.isOn;
+        float timee = Time.timeSinceLevelLoad;
 
-        if (!randomSeed.isOn)
-            combatDynamics.seed = int.Parse(seed.text);
+        MoveTo();
 
-        combatDynamics.abstractRudo1 = new Rudo(rudo1name.text, 1, float.Parse(rudo1vitality.text), float.Parse(rudo1strength.text), float.Parse(rudo1agility.text), float.Parse(rudo1velocity.text), new List<Weapon>(), new List<AbstractPet>());
-        combatDynamics.abstractRudo2 = new Rudo(rudo2name.text, 1, float.Parse(rudo2vitality.text), float.Parse(rudo2strength.text), float.Parse(rudo2agility.text), float.Parse(rudo2velocity.text), new List<Weapon>(), new List<AbstractPet>());
+        yield return new WaitUntil(() => { return 3 < Time.timeSinceLevelLoad-timee; });
 
-        combatDynamics.StartCombat();
+        print("next move ended iteration: " + i + " time: " + Time.timeSinceLevelLoad);
+    }
+
+    void MoveTo()
+    {
+        print("move to iteration " + i);
     }
 
     public void test2()

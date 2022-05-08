@@ -14,17 +14,17 @@ public class UIProfileTest : MonoBehaviour
     // Start is called before the first frame update
     public async void LoadRudos()
     {
-        MoralisUser user = await MoralisInterface.GetUserAsync();
-        string addr = user.authData["moralisEth"]["id"].ToString();
+        //MoralisUser user = await MoralisInterface.GetUserAsync();
+        //string addr = user.authData["moralisEth"]["id"].ToString();
 
-        NftOwnerCollection noc =
-        await MoralisInterface.GetClient().Web3Api.Account.GetNFTsForContract(addr.ToLower(),
-        Constants.MUG_CONTRACT_ADDRESS,
-        ChainList.bsc_testnet);
-        IEnumerable<NftOwner> ownership = from n in noc.Result
-                                            select n;
+        //NftOwnerCollection noc =
+        //await MoralisInterface.GetClient().Web3Api.Account.GetNFTsForContract(addr.ToLower(),
+        //Constants.MUG_CONTRACT_ADDRESS,
+        //ChainList.bsc_testnet);
+        //IEnumerable<NftOwner> ownership = from n in noc.Result
+        //                                    select n;
 
-        print(ownership);
+        //print(ownership);
 
         //var response = await CallContract("getRudosFromAddress2", "[\""+addressInput.text+"\"]");
         //AbstractRudo[] abstractRudos = SerializeObjects.StringToAbstractRudo(response);
