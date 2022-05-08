@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class LoadMiniRudoDisplay : MonoBehaviour
 {
     [SerializeField]
-    public TMP_Text name, elo, vitality, strength, agility, velocity;
+    public TMP_Text name, nftId, elo, vitality, strength, agility, velocity;
     [SerializeField]
     Button buttonToRudoProfile;
 

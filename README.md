@@ -1,4 +1,14 @@
 # El Rudo
  UOC TFG
 
-L'executable està en l'apartat de release. En cada carpeta estan els codis amb els que estic treballant. En Unity està la part visible del joc. En AWS està una copia de la lògica que s'utilitza en Unity per a saber qui guanya (en RudoFight.cs), he fet tests amb lambda i la lògica s'executa de la mateixa manera que en Unity, també he aconseguit modificar la blockchain amb una funció lambda (SystemTasks.cs), si passo un json que contingui les següents habilitats que el jugador pot elegir aquestes queden gravades en la blockchain signant la transacció amb una cartera electrònica especificada. En moralis hi ha certes funcions que reaccionen a esdeveniments del contracte que he creat, per exemple LevelUpSkill.js reacciona a l'esdeveniment de pujada de nivell d'un Rudo en la blockchain i envia un json a la funció lambda que he mencionat abans amb les noves habilitats que l'usuari podrà elegir. En la carpeta Remix hi ha el contracte intel·ligent principal que defineix les característiques del rudo en la blockchain, aquest codi no és compilable ara mateix.
+(si no t'ha arribat email per a tenir acces al video del joc diguem algo, se suposa que youtube t'ha notificat)
+
+Per a probar el joc amb la build de pac3 es te que crear un moneder electronic, millor que sigui Metamask i de moment obligatori en el movil. 
+
+Despres cal afegir la blockchain de mumbai polygon testnet: https://blog.pods.finance/guide-connecting-mumbai-testnet-to-your-metamask-87978071aca8
+
+Despres cal tenir tokens MATIC: https://faucet.polygon.technology/
+
+Despres s'obre el joc i s'escaneja el qr i es firma les notificacions per a iniciar sessió. Pots comprar NFTs en la tenda, pero nose si funcionara ja que el dia de grabar el video no funcionaba, per a comprar-los tens que acceptar una notificació que et surtira al metamask del movil. Despres pots també comprar armes, de moment hi han 5 tipus d'arma amb stats i sprites diferents. En el menú principal pots veure els teus Rudos i equipar armes (les mascotes i escuts no estan implementats), per a equipar-les també tens que acceptar transacció en metamask.
+
+Una vegada tens 1 Rudo pots lluitar contra altres, pots elegir un altre Rudo que tinguis o algun meu (una id del 9 al 12).

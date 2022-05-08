@@ -25,6 +25,22 @@ MonoBehaviour:
     m_Address: Assets/TestAssets/Weapons/sword_01.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 8dee043865b153d4eb62b3d8824cc7de
+    m_Address: Assets/TestAssets/Weapons/nose.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6a3348af53722a84eb934ca67dec914c
+    m_Address: Assets/TestAssets/Weapons/maza.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 923f688c73a5ea54a9decc913d333e40
+    m_Address: Assets/TestAssets/Weapons/katana.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1066b4bfbb87a894892414ca724bc0d2
+    m_Address: Assets/TestAssets/Weapons/cuchillo.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 50b70ca8f9259b548880ba33d59b9877, type: 2}
   m_SchemaSet:

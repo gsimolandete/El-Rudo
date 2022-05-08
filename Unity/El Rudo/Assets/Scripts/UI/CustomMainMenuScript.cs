@@ -70,15 +70,22 @@ public class CustomMainMenuScript : MonoBehaviour
 
         for (int i = 0; i < result.Count; i++)
         {
-            rudoList.Add(await GetRudo(result[i]));
+            rudoList.Add(await ProcessRudo(result[i]));
         }
 
         ownRudos = rudoList;
 
         return rudoList;
     }
+    public async Task<Rudo> GetRudo(int rudoId)
+    {
+        MoralisQuery<RudoMoralis> query = MoralisInterface.GetClient().Query<RudoMoralis>().WhereEqualTo("rudoId", rudoId);
+        List<RudoMoralis> result = await query.FindAsync() as List<RudoMoralis>;
 
-    public async Task<Rudo> GetRudo(RudoMoralis result)
+        return await ProcessRudo(result[0]);
+    }
+
+    public async Task<Rudo> ProcessRudo(RudoMoralis result)
     {
         List<Weapon> weapons = new List<Weapon>();
 

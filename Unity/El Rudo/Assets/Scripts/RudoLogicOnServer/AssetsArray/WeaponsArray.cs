@@ -14,48 +14,48 @@ public static class WeaponsArray
         }
         else if (id < MAXLEGENDARY + MAXEPIC)
         {
-            return epicWeapons[id % epicWeapons.Length + MAXLEGENDARY];
+            return epicWeapons[(id + MAXLEGENDARY) % epicWeapons.Length];
         }
         else if (id < MAXLEGENDARY + MAXEPIC + MAXRARE)
         {
-            return rareWeapons[id % rareWeapons.Length + MAXLEGENDARY + MAXEPIC];
+            return rareWeapons[(id + MAXLEGENDARY + MAXEPIC) % rareWeapons.Length];
         }
         else
         {
-            return commonWeapons[id % commonWeapons.Length + MAXLEGENDARY + MAXEPIC + MAXCOMMON];
+            return commonWeapons[(id + MAXLEGENDARY + MAXEPIC + MAXCOMMON) % commonWeapons.Length];
         }
     }
 
     readonly static WeaponStats[] legendaryWeapons =
     {
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0)
+        new WeaponStats(1.2f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/katana.prefab"),
+        new WeaponStats(0.6f, new DerivatedStats(0,0.2f,0,0,0,0,0,0,0,0), AttackType.Melee, 0, 0, "Assets/TestAssets/Weapons/cuchillo.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/sword_01.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/nose.prefab"),
+        new WeaponStats(1.6f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/maza.prefab")
     };
     readonly static WeaponStats[] epicWeapons =
     {
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0)
+        new WeaponStats(1.2f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/katana.prefab"),
+        new WeaponStats(0.6f, new DerivatedStats(0,0.2f,0,0,0,0,0,0,0,0), AttackType.Melee, 0, 0, "Assets/TestAssets/Weapons/cuchillo.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/sword_01.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/nose.prefab"),
+        new WeaponStats(1.6f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/maza.prefab")
     };
     readonly static WeaponStats[] rareWeapons =
     {
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0)
+        new WeaponStats(1.2f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/katana.prefab"),
+        new WeaponStats(0.6f, new DerivatedStats(0,0.2f,0,0,0,0,0,0,0,0), AttackType.Melee, 0, 0, "Assets/TestAssets/Weapons/cuchillo.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/sword_01.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/nose.prefab"),
+        new WeaponStats(1.6f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/maza.prefab")
     };
     readonly static WeaponStats[] commonWeapons = 
-    { 
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0),
-        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, 1.5f, 0)
+    {
+        new WeaponStats(1.2f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/katana.prefab"),
+        new WeaponStats(0.6f, new DerivatedStats(0,0.2f,0,0,0,0,0,0,0,0), AttackType.Melee, 0, 0, "Assets/TestAssets/Weapons/cuchillo.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/sword_01.prefab"),
+        new WeaponStats(1, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/nose.prefab"),
+        new WeaponStats(1.6f, new DerivatedStats(0,0,0,0,0,0,0,0,0,0), AttackType.Melee, .3f, 0, "Assets/TestAssets/Weapons/maza.prefab")
     };
 }

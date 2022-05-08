@@ -35,10 +35,13 @@ public abstract class FighterCombatVisual : FighterCombat
         {
             case AttackInteraction.Clean:
                 yield return new WaitForSeconds(targetInteractionDelay);
-                if (target.Hp>0)
+                if (target.Hp > 0)
                     (target as FighterCombatVisual).FighterController.GetHurt();
                 else
+                {
+                    (CombatDynamicsInstance as CombatDynamicsVisual).LoadMainMenu.SetActive(true);
                     (target as FighterCombatVisual).FighterController.GetDefeated();
+                }
                 break;
             case AttackInteraction.Blocked:
                 if (target.Hp > 0)

@@ -19,6 +19,8 @@ public class CombatDynamicsVisual : CombatDynamics
     Slider hpSlider1, hpSlider2;
     [SerializeField]
     TMP_Text rudoNameText1, rudoNameText2;
+    [SerializeField]
+    public GameObject LoadMainMenu;
     public CombatDynamicsVisual(bool randomSeed, Rudo abstractRudo1, Rudo abstractRudo2, int seed = 0) : base( randomSeed,  abstractRudo1,  abstractRudo2,  seed)
     {
     }
@@ -50,5 +52,9 @@ public class CombatDynamicsVisual : CombatDynamics
     {
         teamFighterList[0] = rudo1.GetTeamVisual(TeamNum.Team1, hpSlider1);
         teamFighterList[1] = rudo2.GetTeamVisual(TeamNum.Team2, hpSlider2);
+    }
+    protected override void OnCombatEnded()
+    {
+        LoadMainMenu.SetActive(true);
     }
 }

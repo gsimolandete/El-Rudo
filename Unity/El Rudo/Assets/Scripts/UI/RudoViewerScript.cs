@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using static GlobalVariables;
 
@@ -72,11 +73,12 @@ public class RudoViewerScript : LoadMiniRudoDisplay
         print(response);
     }
 
-    public void InitializeBig(Rudo rudo)
+    public async void InitializeBig(Rudo rudo)
     {
         rudoDisplayed = rudo;
         name.text = rudo.FighterName;
         elo.text = "0";
+        nftId.text = rudo.NftId.ToString();
         vitality.text = rudo.Vitality.ToString();
         strength.text = rudo.Strength.ToString();
         agility.text = rudo.Agility.ToString();

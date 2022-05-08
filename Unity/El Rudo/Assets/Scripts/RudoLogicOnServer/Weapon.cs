@@ -10,9 +10,9 @@ public class Weapon : WeaponStats
     [SerializeField]
     public Equipable Equipable;
 
-    public Weapon(int nftId, int equipableId, int quality, string pathToAddressable, WeaponStats weaponStats) : base ( weaponStats.StrengthRatio,  weaponStats.DerivatedStats, weaponStats.WeaponType, weaponStats.AttackDistance, weaponStats.Block_DamagePercent)
+    public Weapon(int nftId, int equipableId, int quality, string pathToAddressable, WeaponStats weaponStats) : base ( weaponStats.StrengthRatio,  weaponStats.DerivatedStats, weaponStats.WeaponType, weaponStats.AttackDistance, weaponStats.Block_DamagePercent, pathToAddressable)
     {
-        Equipable = new Equipable(nftId,equipableId,quality, pathToAddressable);
+        Equipable = new Equipable(nftId,equipableId,quality, weaponStats.PathToAddressable);
     }
     public float Initiative => derivatedStats.initiative;
     public float MultiHit => derivatedStats.multiHit;

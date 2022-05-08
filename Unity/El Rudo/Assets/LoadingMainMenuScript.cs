@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadingScenesScript : MonoBehaviour
+public class LoadingMainMenuScript : MonoBehaviour
 {
-    [SerializeField]
-    Slider slider;
+
     public void LoadFightingScene()
     {
         StartCoroutine(LoadYourAsyncScene());
@@ -20,12 +19,11 @@ public class LoadingScenesScript : MonoBehaviour
         // You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
         // a sceneBuildIndex of 1 as shown in Build Settings.
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("FightScene");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
 
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
-            slider.value = asyncLoad.progress / .9f;
             yield return null;
         }
     }

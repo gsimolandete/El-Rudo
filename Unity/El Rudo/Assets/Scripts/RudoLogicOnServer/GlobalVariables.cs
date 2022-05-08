@@ -21,11 +21,11 @@ public static class GlobalVariables
     public const int MAXIMUMRUDOS = 10;
 
     public const float  turnMeter = 100f, // full capacity of turn metter
-                        strength_noWeaponDamage = 1f / 35f,
-                        velocity_TurnMeter = 1f / 20f, //rate at wich the turn meter fills, depends on the velocity
-                        velocity_Initiative = 1f / 30f,
-                        velocity_Anticipation = 1f / 40f,
-                        velocity_Multihit = 1f / 40f,
+                        strength_noWeaponDamage = 1f / 350f,
+                        velocity_TurnMeter = 1f / 200f, //rate at wich the turn meter fills, depends on the velocity
+                        velocity_Initiative = 1f / 300f,
+                        velocity_Anticipation = 1f / 400f,
+                        velocity_Multihit = 1f / 400f,
                         agility_CounterAttack = 1f / 100f,
                         agility_Evasion = 1f / 100f,
                         emptyHandedBlockPercent = 0.1f,
@@ -76,7 +76,7 @@ public static class GlobalVariables
     public enum AttackInteraction { Clean, Blocked, Dodged }
     public enum DisarmInteraction { Forced, Intentional }
     public enum Rarities { Common, Rare, Epic, Legendary}
-    public static float MaxHP(Fighter fighter) { return 50f + fighter.Vitality; }
+    public static float MaxHP(Fighter fighter) { return 200f + fighter.Vitality; }
     public static float TimeToAttack(FighterCombat fc) { return (turnMeter - fc.TurnMeter) / AttackMeterVelocity(fc); }
     public static float MeterIncrement(FighterCombat fc, float time) { return AttackMeterVelocity(fc) * time; }
     static float AttackMeterVelocity(FighterCombat fc) { return (1 + velocity_TurnMeter * fc.Fighter.Velocity); }

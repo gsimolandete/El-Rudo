@@ -159,13 +159,20 @@ public class CombatDynamics : MonoBehaviour
         if (teamFighterList[0].Rudo.Hp <= 0)
         {
             PrintWithColor(teamFighterList[1].Rudo.Fighter.FighterName + " won", "#FFFFFF");
+            OnCombatEnded();
             return true;
         }
         else if (teamFighterList[1].Rudo.Hp <= 0)
         {
-            PrintWithColor(teamFighterList[0].Rudo.Fighter.FighterName + " won", "#FFFFFF"); 
+            PrintWithColor(teamFighterList[0].Rudo.Fighter.FighterName + " won", "#FFFFFF");
+            OnCombatEnded();
             return true;
         }
         return false;
+    }
+
+    protected virtual void OnCombatEnded()
+    {
+
     }
 }
