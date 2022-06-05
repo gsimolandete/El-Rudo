@@ -305,12 +305,12 @@ public class FighterCombat
     {
         PrintWithColor(Fighter.FighterName + " yield weapon: "+ activeWeapon.name, "#DAFF1E");
     }
-    IEnumerator ReceiveAttack(FighterCombat attacker, AttackProperties attackProperties)
+    void ReceiveAttack(FighterCombat attacker, AttackProperties attackProperties)
     {
         if (!attackProperties.attackPropertiesEnums.Contains(AttackPropertiesEnum.NoDodge) && Evaded(attacker))
         {
             Dodge(attackProperties);
-            yield break;
+            return;
         }
         else if (Blocked(attacker))
         {
@@ -318,7 +318,7 @@ public class FighterCombat
         }
 
         if (attackProperties.damage <= 0)
-            yield break;
+            return;
 
         ConsiderGetDisarmed(attacker, DisarmInteraction.Forced);
         GetHurt(attackProperties.damage);
@@ -326,7 +326,7 @@ public class FighterCombat
         if (!attackProperties.attackPropertiesEnums.Contains(AttackPropertiesEnum.NoCounter) && CanKeepFighting() && attackType == AttackType.Melee)
             ConsiderCounterAttack(attacker);
     }
-    public virtual IEnumerator NextMove(FighterCombat target)
+    public virtual void NextMove(FighterCombat target)
     {
         ModifyWeaponSkillPoints(weaponFillAmmountPerTurn);
 
@@ -342,7 +342,7 @@ public class FighterCombat
             MoveCharacterToSpawn();
             WeaponSkillAttack(target);
             MoveCharacterToSpawn();
-            yield break;
+            return;
         }
 
         if (attackType == AttackType.Melee)
@@ -376,8 +376,8 @@ public class FighterCombat
 
     }
 
-    protected virtual IEnumerator WaitUntilActionsEnded(FighterCombat target)
+    protected virtual void WaitUntilActionsEnded(FighterCombat target)
     {
-        yield return null;
+        return;
     }
 }

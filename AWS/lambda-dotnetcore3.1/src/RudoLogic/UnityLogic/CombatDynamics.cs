@@ -54,13 +54,11 @@ public class CombatDynamics
         CombatDynamicsInstance = this;
         ShowLogs = showLogs;
         DeadKeepFighting = false;
-        Console.WriteLine("xd");
     }
 
     protected virtual void PrepareFight()
     {
-        Console.WriteLine("xd2");
-
+        CombatDynamicsInstance.dv = new DebugVariables();
         if(randomSeed)
             seed = (int)(RandomSingleton.NextDouble() * int.MaxValue);
 

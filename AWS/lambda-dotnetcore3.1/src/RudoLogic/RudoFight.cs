@@ -17,8 +17,8 @@ namespace RudoNamespace
 
         public APIGatewayProxyResponse StartFight(ILambdaContext context)
         {
-            Rudo rudo1 = new Rudo(0,0,"rudo1",0,25,25,25,25,new List<Weapon>{new Weapon(0,0,0)},null, new Shield(0,0,0), new List<int>(){ 1, 0});
-            Rudo rudo2 = new Rudo(0,0,"rudo2",0,25,25,25,25,new List<Weapon>{new Weapon(0,1,0)},null, new Shield(0,0,0), new List<int>(){ 1, 0});
+            Rudo rudo1 = new Rudo(0,0,"rudo1",0,25,25,25,25,new List<Weapon>{new Weapon(0,0,0)}, new Pet(0,0,0), new Shield(0,0,0), new List<int>(){ 1, 0});
+            Rudo rudo2 = new Rudo(0,0,"rudo2",0,25,25,25,25,new List<Weapon>{new Weapon(0,1,0)}, new Pet(0,0,0), new Shield(0,0,0), new List<int>(){ 1, 0});
             CombatDynamics c = new CombatDynamics(false,rudo1,rudo2,0);
             c.StartCombat();
 
