@@ -11,23 +11,23 @@ La instal·lació serà feta en Windows 10 amb Google Chrome.
 3.  Clicar l’extensió de Metamask en Chrome a dalt a la dreta.
 4.  Crear un nou moneder o connectar-se a un existent. Si es crea una compte es te que crear una contrasenya per a poder manipular el teu moneder des de Metamask i guardar la clau privada de la compte. 
 5.  Afegir la Blockchain de Mumbai Polygon: 
-5.1. Clicar a l’extensió de Metamask.
-5.2 Clicar a dalt a la dreta de la finestra de Metamask i obrir un menú.
-5.3 Seleccionar configuració.
-5.4 Seleccionar xarxes.
-5.5 Afegir una xarxa amb les següents característiques:
-    Nom de xarxa: Mumbai
-    URL de RPC (segons el dia no funciona i es te que posar un altre, elegir un): 
-      https://rpc-mumbai.matic.today 
-      https://matic-mumbai.chainstacklabs.com 
-    ID de cadena: 80001
-    Símbol: MATIC
-    URL del Explorador de blocs: https://explorer.matic.network/
-6.  Seleccionar la Blockchain de Mumbai.
-7.  Reclamar 1 MATIC:
-8.  Obrir la finestra de Metamask.
-9.  Copiar l’adreça clicant en la compte per a copiar-la.
-10. Reclamar MATIC a l’adreça copiada : https://mumbaifaucet.com/
+6 Clicar a l’extensió de Metamask.
+7. Clicar a dalt a la dreta de la finestra de Metamask i obrir un menú.
+8. Seleccionar configuració.
+9. Seleccionar xarxes.
+10. Afegir una xarxa amb les següents característiques:
+*   Nom de xarxa: Mumbai
+*   URL de RPC (segons el dia no funciona i es te que posar un altre, elegir un): 
+*   https://rpc-mumbai.matic.today 
+*   https://matic-mumbai.chainstacklabs.com 
+*   ID de cadena: 80001
+*   Símbol: MATIC
+*   URL del Explorador de blocs: https://explorer.matic.network/
+11.  Seleccionar la Blockchain de Mumbai.
+12.  Reclamar 1 MATIC:
+13.  Obrir la finestra de Metamask.
+14.  Copiar l’adreça clicant en la compte per a copiar-la.
+15. Reclamar MATIC a l’adreça copiada : https://mumbaifaucet.com/
 
 
 Per a arribar a veure gestionar un Rudo i fer que combati contra un altre cal fer:
