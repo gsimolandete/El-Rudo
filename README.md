@@ -11,7 +11,7 @@ La instal·lació serà feta en Windows 10 amb Google Chrome.
 3.  Clicar l’extensió de Metamask en Chrome a dalt a la dreta.
 4.  Crear un nou moneder o connectar-se a un existent. Si es crea una compte es te que crear una contrasenya per a poder manipular el teu moneder des de Metamask i guardar la clau privada de la compte. 
 5.  Afegir la Blockchain de Mumbai Polygon: 
-5.1 Clicar a l’extensió de Metamask.
+5.1. Clicar a l’extensió de Metamask.
 5.2 Clicar a dalt a la dreta de la finestra de Metamask i obrir un menú.
 5.3 Seleccionar configuració.
 5.4 Seleccionar xarxes.
