@@ -6,8 +6,29 @@ Instruccions per a jugar:
 Preparar moneder:
 
 La instal·lació serà feta en Windows 10 amb Google Chrome.
-
+Instal·lar Chrome: https://www.google.com/intl/es_es/chrome/
 Instal·lar Metamask: https://metamask.io/download/
+Clicar l’extensió de Metamask en Chrome a dalt a la dreta.
+Crear un nou moneder o connectar-se a un existent. Si es crea una compte es te que crear una contrasenya per a poder manipular el teu moneder des de Metamask i guardar la clau privada de la compte. 
+Afegir la Blockchain de Mumbai Polygon: 
+Clicar a l’extensió de Metamask.
+Clicar a dalt a la dreta de la finestra de Metamask i obrir un menú.
+Seleccionar configuració.
+Seleccionar xarxes.
+Afegir una xarxa amb les següents característiques:
+Nom de xarxa: Mumbai
+URL de RPC (segons el dia no funciona i es te que posar un altre, elegir un): 
+https://rpc-mumbai.matic.today 
+https://matic-mumbai.chainstacklabs.com 
+ID de cadena: 80001
+Símbol: MATIC
+URL del Explorador de blocs: https://explorer.matic.network/
+Seleccionar la Blockchain de Mumbai.
+Reclamar 1 MATIC:
+Obrir la finestra de Metamask.
+Copiar l’adreça clicant en la compte per a copiar-la.
+Reclamar MATIC a l’adreça copiada : https://mumbaifaucet.com/
+
 
 Per a arribar a veure gestionar un Rudo i fer que combati contra un altre cal fer:
 1.	Elegir la Xarxa de la Blockchain de Mumbai en Metamask.
