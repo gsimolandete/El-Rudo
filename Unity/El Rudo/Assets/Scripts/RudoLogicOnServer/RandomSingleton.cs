@@ -29,6 +29,18 @@ public sealed class RandomSingleton
     {
         return instance.random.NextDouble();
     }
+    public static void ShuffleSortedList<TValue>(SortedList<int, TValue> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = (int)(NextDouble() * (n + 1));
+            TValue value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
 
     public Random Random { get => random; set => random = value; }
 }

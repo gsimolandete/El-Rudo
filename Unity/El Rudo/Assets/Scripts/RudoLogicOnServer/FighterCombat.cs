@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GlobalVariables;
+using System.Linq;
 
 public class FighterCombat
 {
@@ -24,7 +25,7 @@ public class FighterCombat
     [SerializeField]
     float turnMeter;
     [SerializeField]
-    float hp, shieldHp;
+    float hp, shieldHp, weaponSkillFillPoints;
     [SerializeField]
     protected Weapon activeWeapon;
     [SerializeField]
@@ -43,8 +44,13 @@ public class FighterCombat
         this.fighter = fighter;
         turnMeter = fighter.Initiative;
         hp = MaxHP(fighter);
-        if(fighter.Shield!=null)
-            shieldHp = fighter.Shield.ShieldHealth;
+        weaponSkillFillPoints = 0;
+        if (fighter.Shield != null)
+        {
+            activeShield = fighter.Shield;
+            //shieldHp = fighter.Shield.shieldHealth;
+            shieldHp = 1;
+        }
         this.team = team;
         attackDistance = defaultAttackDistance;
     }
@@ -52,6 +58,7 @@ public class FighterCombat
     public Fighter Fighter { get => fighter; set => fighter = value; }
     public float TurnMeter { get => turnMeter; set => turnMeter = value; }
     public float Hp { get => hp; }
+    public float WeaponSkillFillPoints { get => weaponSkillFillPoints; }
     public TeamNum Team { get => team; set => team = value; }
     public float ShieldHp { get => shieldHp; }
 
@@ -64,11 +71,11 @@ public class FighterCombat
     public float Anticipate { get { return fighter.Anticipate + (activeWeapon != null ? activeWeapon.Anticipate : 0); } }
     //if shield get shield block rate, if not shield but weapon get weapon block rate
     public float Armor { get { return fighter.Armor + (activeWeapon != null ? activeWeapon.Armor : 0); } }
-    public float Disarm { get { return fighter.Disarm + (activeWeapon != null ? activeWeapon.Disarm : 0); } }
+    public float DisarmChance { get { return fighter.Disarm + (activeWeapon != null ? activeWeapon.Disarm : 0); } }
     public float Precision { get { return fighter.Precision + (activeWeapon != null ? activeWeapon.Precision : 0); } }
     public float Accuracy { get { return fighter.Accuracy + (activeWeapon != null ? activeWeapon.Accuracy : 0); } }
-    public float Block { get { return fighter.Block + (activeShield != null ? activeShield.BlockRate : (activeWeapon != null ? activeWeapon.Block : 0)); } }
-    public float DamageMitigationPercent { get { return 1 - (activeShield != null ? activeShield.BlockPercent : (activeWeapon != null ? activeWeapon.Block_DamagePercent + emptyHandedBlockPercent : emptyHandedBlockPercent)); } }
+    public float BlockChance { get { return fighter.Block + (activeShield != null ? activeShield.blockRate : (activeWeapon != null ? activeWeapon.Block : 0)); } }
+    public float DamageMitigationPercent { get { return activeShield != null ? activeShield.blockPercent : (activeWeapon != null ? activeWeapon.block_DamagePercent + emptyHandedBlockPercent : emptyHandedBlockPercent); } }
 
     //ATTACK INFO
     public float AttackDistance { get => attackDistance; set => attackDistance = value; }
@@ -78,9 +85,21 @@ public class FighterCombat
     {
         hp += variation;
     }
-    public void ModifyShieldHp(float variation)
+    public virtual void ModifyWeaponSkillPoints(float variation)
     {
-        hp += variation;
+        weaponSkillFillPoints += variation;
+    }
+    public virtual void ModifyShieldHp(float variation)
+    {
+        if (activeShield == null)
+            return;
+
+        shieldHp += variation; 
+        
+        if (ShieldHp <= 0)
+        {
+            activeShield = null;
+        }
     }
     public bool CanKeepFighting()
     {
@@ -108,20 +127,18 @@ public class FighterCombat
 
         return Hp > 0;
     }
-    public void ConsiderAnticipateAttack(FighterCombat attacker)
+    public bool ConsiderAnticipateAttack(FighterCombat attacker)
     {
         if (Anticipate < RandomSingleton.NextDouble())
-            return;
+            return false;
 
         if (team == TeamNum.Team1)
             CombatDynamicsInstance.dv.team1NumberAnticipate++;
         else
             CombatDynamicsInstance.dv.team2NumberAnticipate++;
 
-
-        ConsiderDisarmOponent(attacker, DisarmInteraction.Forced);
         PrintWithColor(" ANTICIPATE ", "#B80000");
-        Attack(attacker);
+        return true;
     }
     public void ConsiderCounterAttack(FighterCombat attacker)
     {
@@ -134,7 +151,7 @@ public class FighterCombat
             CombatDynamicsInstance.dv.team2NumberCounterAttack++;
 
         PrintWithColor(" COUNTER ", "#B80000");
-        Attack(attacker);
+        BasicAttack(attacker, new AttackPropertiesEnum[1] { AttackPropertiesEnum.NoCounter});
     }
     public bool Evaded(FighterCombat attacker)
     {
@@ -146,12 +163,11 @@ public class FighterCombat
         else
             CombatDynamicsInstance.dv.team2NumberEvasion++;
 
-        PrintWithColor(" EVASION ", "#B80000");
         return true;
     }
     public bool Blocked(FighterCombat attacker)
     {
-        if (Block - attacker.Accuracy < RandomSingleton.NextDouble())
+        if (BlockChance - attacker.Accuracy < RandomSingleton.NextDouble())
             return false;
 
         if (team == TeamNum.Team1)
@@ -159,83 +175,112 @@ public class FighterCombat
         else
             CombatDynamicsInstance.dv.team2NumberBlock++;
 
-        PrintWithColor(" BLOCKED ", "#B80000");
         return true;
     }
-    protected void Attack(FighterCombat damagedFighter)
+    protected virtual void BasicAttack(FighterCombat target, AttackPropertiesEnum[] attackPropertiesEnums = null)
     {
-        float damage = CalculateDamage(damagedFighter);
+        PrintWithColor(this.Fighter.FighterName + " attacks", TeamColor(target.Team));
+        AttackProperties ap = new AttackProperties(CalculateBasicAttackDamage(target), this, attackPropertiesEnums);
 
-        damagedFighter.ModifyHP(-damage);
-
-        CombatDynamicsInstance.StartCoroutine(CompleteAttack(damagedFighter, damage, AttackInteraction.Clean, 0.3f));
+        if(target.CanKeepFighting())
+            CombatDynamicsInstance.StartCoroutine(target.ReceiveAttack(this, ap));
     }
-    protected virtual void BlockedAttack(FighterCombat damagedTarget)
+    protected virtual void WeaponSkillAttack(FighterCombat target)
     {
-        float damage = CalculateDamage(damagedTarget);
+        PrintWithColor(this.Fighter.FighterName + " uses weapon skill", TeamColor(target.Team));
+        AttackProperties ap = new AttackProperties(CalculateDamage(target,ActiveWeapon.weaponSkill.skillTriggerTime.StrengthRatio), this, new AttackPropertiesEnum[2] { AttackPropertiesEnum.NoCounter, AttackPropertiesEnum.NoDodge});
 
-        damage -= BlockFlatDamage;
-        float damageMitigated = damage * damagedTarget.DamageMitigationPercent;
+        if (target.CanKeepFighting())
+            CombatDynamicsInstance.StartCoroutine(target.ReceiveAttack(this, ap));
+    }
+    public virtual void GetHurt(float damage)
+    {
+        ModifyHP(-damage);
+        PrintWithColor(this.Fighter.FighterName + " received " + damage + " damage " , TeamColor(Team));
+    }
+    public virtual DefenseInteraction Block(AttackProperties attackProperties)
+    {
+        PrintWithColor(this.Fighter.FighterName + " BLOCKED ", "#B80000");
 
-        if(ShieldHp - damageMitigated < 0)
+        DefenseInteraction ai = DefenseInteraction.Blocked;
+        float damagePercentMitigationByShield = DamageMitigationPercent;
+        float naturalDamageMitigation = 0;
+        if (fighter.GetType() == typeof(Rudo))
         {
-            damageMitigated = shieldHp;
+            SkillsActiveStats<DefensiveBlockSkillTrigger> bst = (fighter as Rudo).ActiveSkills.GetBlockSkill();
+            if (bst != null)
+            {
+                CompleteUseActiveSkill(bst);
+                ai = DefenseInteraction.None;
+                bst.DoInteractions(attackProperties.attacker, this);
+                naturalDamageMitigation += bst.skillTriggerTime.BlockPercent;
+            }
         }
 
-        damage -= damageMitigated;
+        attackProperties.damage -= BlockFlatDamage;
+        attackProperties.damage -= attackProperties.damage * naturalDamageMitigation;
+        if (activeShield != null)
+        {
+            float damageMitigatedByShield = attackProperties.damage * damagePercentMitigationByShield;
+            damageMitigatedByShield = Mathf.Max(damageMitigatedByShield, 0);
 
-        damagedTarget.ModifyHP(-damage);
-        damagedTarget.ModifyShieldHp(-damageMitigated);
+            if (ShieldHp - damageMitigatedByShield < 0)
+            {
+                damageMitigatedByShield = shieldHp;
+            }
+            attackProperties.damage -= damageMitigatedByShield;
+            ModifyShieldHp(-damageMitigatedByShield);
+        }
 
-        CombatDynamicsInstance.StartCoroutine(CompleteAttack(damagedTarget, damage, AttackInteraction.Blocked, 0.3f));
+        return ai;
     }
-    protected void EvadedAttack(FighterCombat target)
+    public virtual void Dodge(AttackProperties attackProperties)
     {
-        CombatDynamicsInstance.StartCoroutine(CompleteAttack(target, 0, AttackInteraction.Dodged, 0.3f));
+        attackProperties.damage = 0;
+        PrintWithColor(this.Fighter.FighterName + " DODGED ", "#B80000");
     }
-    protected float CalculateDamage(FighterCombat damagedFighter)
+    protected float CalculateDamage(FighterCombat damagedFighter, float strengthRatio)
     {
-        float damage = 10;
+        float damage = defaultDamage;
 
+        damage += Fighter.Strength * strengthRatio;
+        damage *= (1 - damagedFighter.Armor);
+        return damage;
+    }
+    protected float CalculateBasicAttackDamage(FighterCombat damagedFighter)
+    {
         if (ActiveWeapon != null)
         {
-            damage += Fighter.Strength * ActiveWeapon.StrengthRatio;
-            damage *= damagedFighter.Armor;
-            return damage;
+            return CalculateDamage(damagedFighter, ActiveWeapon.strengthRatio);
         }
         else
         {
-            damage += Fighter.Strength * strength_noWeaponDamage;
-            damage *= damagedFighter.Armor;
-            return damage;
+            return CalculateDamage(damagedFighter, strength_noWeaponDamage);
         }
     }
-    public virtual IEnumerator CompleteAttack(FighterCombat target, float damage, AttackInteraction attackInteraction, float targetInteractionDelay)
-    {
-        PrintWithColor(this.Fighter.FighterName + " dealt " + damage + " to " + target.Fighter.FighterName, TeamColor(target.Team));
-        yield return null;
-    }
-    public virtual void MoveCharacterToSpawn()
-    {
 
-    }
-    public virtual void MoveCharacterToAttack(float attackDistance, FighterCombat target)
+    public virtual void MoveCharacterToSpawn(){}
+    public virtual void MoveCharacterToAttack(float attackDistance, FighterCombat target){}
+    public void ConsiderGetDisarmed(FighterCombat attacker, DisarmInteraction disarmInteraction)
     {
-
-    }
-    public void ConsiderDisarmOponent(FighterCombat target, DisarmInteraction disarmInteraction)
-    {
-        if (target.ActiveWeapon == null)
+        if (ActiveWeapon == null)
             return;
 
-        if (Disarm > RandomSingleton.NextDouble())
+        if (attacker.DisarmChance > RandomSingleton.NextDouble())
         {
-            target.ActiveWeapon = null;
-            target.AttackType = AttackType.Melee;
-            target.AttackDistance = defaultAttackDistance;
-
-            target.CompleteGetDisarmed(disarmInteraction);
+            Disarm(disarmInteraction);
         }
+    }
+    public void Disarm(DisarmInteraction disarmInteraction)
+    {
+        if (activeWeapon == null)
+            return;
+
+        ActiveWeapon = null;
+        AttackType = AttackType.Melee;
+        AttackDistance = defaultAttackDistance;
+
+        CompleteGetDisarmed(disarmInteraction);
     }
 
     public virtual void CompleteGetDisarmed(DisarmInteraction disarmInteraction)
@@ -256,31 +301,75 @@ public class FighterCombat
             int index = (int)(RandomSingleton.NextDouble() * (Fighter.Weapons.Count - 1));
             activeWeapon = Fighter.Weapons[index];
             Fighter.Weapons.RemoveAt(index);
-            AttackType = activeWeapon.WeaponType;
-            AttackDistance = activeWeapon.AttackDistance;
+            AttackType = activeWeapon.attackType;
+            AttackDistance = activeWeapon.attackDistance + defaultAttackDistance;
             CompleteYieldWeapon();
         }
     }
+    protected virtual void CompleteUseActiveSkill<T>(SkillsActiveStats<T> skillsActiveStats) where T : ASkillTriggerTime
+    {
+        PrintWithColor(this.Fighter.FighterName + " used skill: "+skillsActiveStats.name, "#31FF11");
+    }
     protected virtual void CompleteYieldWeapon()
     {
-        PrintWithColor(Fighter.FighterName + " yield a weapon", "#DAFF1E");
+        PrintWithColor(Fighter.FighterName + " yield weapon: "+ activeWeapon.name, "#DAFF1E");
+    }
+    IEnumerator ReceiveAttack(FighterCombat attacker, AttackProperties attackProperties)
+    {
+        if (!attackProperties.attackPropertiesEnums.Contains(AttackPropertiesEnum.NoDodge) && Evaded(attacker))
+        {
+            Dodge(attackProperties);
+            yield break;
+        }
+        else if (Blocked(attacker))
+        {
+            Block(attackProperties);
+        }
+
+        if (attackProperties.damage <= 0)
+            yield break;
+
+        ConsiderGetDisarmed(attacker, DisarmInteraction.Forced);
+        GetHurt(attackProperties.damage);
+
+        yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(attacker));
+
+        if (!attackProperties.attackPropertiesEnums.Contains(AttackPropertiesEnum.NoCounter) && CanKeepFighting() && attackType == AttackType.Melee)
+            ConsiderCounterAttack(attacker);
     }
     public virtual IEnumerator NextMove(FighterCombat target)
     {
+        ModifyWeaponSkillPoints(weaponFillAmmountPerTurn);
+
         if (Fighter.Weapons != null)
         {
             YieldWeapon();
             yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
         }
 
+        if (activeWeapon!= null && activeWeapon.weaponSkill.pointsToActivate <= WeaponSkillFillPoints)
+        {
+            SkillsActiveWeaponStats saws = activeWeapon.weaponSkill;
+            ModifyWeaponSkillPoints(-saws.pointsToActivate);
+            MoveCharacterToSpawn();
+            yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
+            WeaponSkillAttack(target);
+            yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
+            MoveCharacterToSpawn();
+            yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
+            yield break;
+        }
+
         if (attackType == AttackType.Melee)
         {
             MoveCharacterToAttack(attackDistance, target);
             yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
-            target.ConsiderAnticipateAttack(this);
-            yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
+            if (target.ConsiderAnticipateAttack(this))
+            {
+                target.BasicAttack(this, new AttackPropertiesEnum[1] { AttackPropertiesEnum.NoCounter});
+                yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
+            }
         }
-
 
         do //consecutive attacks
         {
@@ -295,32 +384,15 @@ public class FighterCombat
                 yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
             }
 
-            if (target.CanKeepFighting() && target.Evaded(this))
-            {
-                EvadedAttack(target);
-                yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
-            }
-            else if (target.CanKeepFighting() && target.Blocked(this))
-            {
-                ConsiderDisarmOponent(target, DisarmInteraction.Forced);
-                BlockedAttack(target);
-                yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
-            }
-            else
-            {
-                ConsiderDisarmOponent(target, DisarmInteraction.Forced);
-                Attack(target);
-                yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
-            }
-
-            if (target.CanKeepFighting() && attackType == AttackType.Melee)
-                target.ConsiderCounterAttack(this);
+            BasicAttack(target);
 
             yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
 
         } while (CanKeepFighting() && MultiHit > RandomSingleton.NextDouble());
 
-        MoveCharacterToSpawn();
+        if(CanKeepFighting())
+            MoveCharacterToSpawn();
+
         yield return CombatDynamicsInstance.StartCoroutine(WaitUntilActionsEnded(target));
     }
 

@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GlobalVariables;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "RudoLog", menuName = "ScriptableObjects/Pet", order = 2)]
-public class Pet : Fighter {
+public class Pet : PetStats {
     public Equipable Equipable;
-    public Pet(int nftId, int equipableId, int quality, string pathToAddressable, string name, float vitality, float strength, float velocity, float agility) : base( name, vitality, strength, velocity, agility, new List<Weapon>(),null)
+    public Pet(int nftId, int equipableId, int quality) : base( PetsArray.GetInstance(equipableId).FighterName, PetsArray.GetInstance(equipableId).Vitality, PetsArray.GetInstance(equipableId).Strength, PetsArray.GetInstance(equipableId).Velocity, PetsArray.GetInstance(equipableId).Agility, new List<Weapon>(),null, PetsArray.GetInstance(equipableId).InitialDerivatedStats, PetsArray.GetInstance(equipableId).pathToAddressable)
     {
-        Equipable = new Equipable(nftId,equipableId,quality, pathToAddressable);
+        Equipable = new Equipable(nftId,equipableId,quality);
     }
 }

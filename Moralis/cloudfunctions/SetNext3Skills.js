@@ -96,8 +96,8 @@ async function RandomStats(){
 }
 
 async function RandomSkill(rudoId, lastNextSkillId){
-    const Rudo = Moralis.Object.extend("Rudo");
-    const query = new Moralis.Query(Rudo);
+    const RudoMoralis = Moralis.Object.extend("RudoMoralis");
+    const query = new Moralis.Query(RudoMoralis);
     query.equalTo("rudoId", parseInt(rudoId));   
     const rudo = await query.first();
     const skills = rudo.get("skills");

@@ -9,8 +9,8 @@ public abstract class Fighter
     [SerializeField]
     protected string fighterName;
     [SerializeField]
-    BasicStats basicStats;
-    DerivatedStats derivatedStats;
+    protected BasicStats basicStats;
+    protected DerivatedStats derivatedStats;
 
     [SerializeField]
     protected Shield shield;
@@ -29,16 +29,6 @@ public abstract class Fighter
         };
         weapons = _weapons;
         shield = _shield;
-        derivatedStats.counterattack = defaultCounterattack + basicStats.agility * agility_CounterAttack;
-        derivatedStats.evasion = defaultEvasion + basicStats.agility * agility_Evasion;
-        derivatedStats.multiHit = defaultMultiHit + basicStats.velocity * velocity_Multihit;
-        derivatedStats.initiative = defaultInitiative + basicStats.velocity * velocity_Initiative;
-        derivatedStats.anticipate = defaultAnticipate + basicStats.velocity * velocity_Anticipation;
-        derivatedStats.block = defaultBlock;
-        derivatedStats.armor = defaultArmor;
-        derivatedStats.disarm = defaultDisarm;
-        derivatedStats.precision = defaultPrecision;
-        derivatedStats.accuracy = defaultAccuracy;
     }
 
     //PRINCIPALS
@@ -61,7 +51,7 @@ public abstract class Fighter
     public float Precision { get { return derivatedStats.precision; } }
     public float Accuracy { get { return derivatedStats.accuracy; } }
     public string FighterName { get => fighterName; set => fighterName = value; }
-    public Shield Shield { get => shield; }
+    public Shield Shield { get => shield; set => shield = value; }
 
     
 }

@@ -25,4 +25,12 @@ Moralis.Cloud.beforeSave("SetWeapon", async(request) => {
         logger.info('Failed to assign weapon, with error code: ' + error.message);
         SaveFailedTransaction(request);
    });
+
+   weapon.set("rudoOwner", rudo.get("rudoId"));
+   weapon.save().then((weapon) => {
+       logger.info('Rudo owner of weapon assigned with objectId: ' + weapon.id);
+   }, (error) => {
+       logger.info('Failed to assign rudo owner to weapon, with error code: ' + error.message);
+       SaveFailedTransaction(request);
+   });
 })

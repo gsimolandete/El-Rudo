@@ -25,4 +25,12 @@ Moralis.Cloud.beforeSave("RemoveWeapon", async(request) => {
         logger.info('Failed to unassign weapon, with error code: ' + error.message);
         SaveFailedTransaction(request);
     });
+
+    weapon.unset("rudoOwner",-1);
+    weapon.save().then((weapon) => {
+        logger.info('rudoowner of weapon unassigned with objectId: ' + weapon.id);
+    }, (error) => {
+        logger.info('Failed to unassign rudoowner of weapon, with error code: ' + error.message);
+        SaveFailedTransaction(request);
+    });
 })

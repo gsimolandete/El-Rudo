@@ -1,7 +1,4 @@
-using Moralis.Platform.Objects;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using MoralisUnity.Platform.Objects;
 
 public class EquipableMoralis : MoralisObject
 {
@@ -9,4 +6,5 @@ public class EquipableMoralis : MoralisObject
     public string owner { get; set; }
     public int weaponId { get; set; }
     public int weaponQuality { get; set; }
+    public int rudoOwner { get; set; }
 }

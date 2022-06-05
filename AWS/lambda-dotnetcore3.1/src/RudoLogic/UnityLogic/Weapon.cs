@@ -3,29 +3,22 @@ using System.Collections.Generic;
 using static GlobalVariables;
 
 [System.Serializable]
-public class Weapon
+public class Weapon : WeaponStats
 {
+    public Equipable Equipable;
 
-    readonly float strengthRatio, agilityRatio, velocityRatio;
-    readonly float initiative = 0, multiHit = 0, counterattack = 0, evasion = 0, anticipate = 0, block = 0, armor = 0, disarm = 0, precision = 0, accuracy = 0;
-    readonly AttackType weaponType;
-    readonly float attackDistance;
-    readonly float block_StrengthRatio;
-
-    public float StrengthRatio { get => strengthRatio;}
-    public float AgilityRatio { get => agilityRatio;}
-    public float VelocityRatio { get => velocityRatio;}
-    public AttackType WeaponType { get => weaponType; }
-    public float Initiative => initiative;
-    public float MultiHit => multiHit;
-    public float Counterattack => counterattack;
-    public float Evasion => evasion;
-    public float Anticipate => anticipate;
-    public float Block => block;
-    public float Armor => armor;
-    public float Disarm => disarm;
-    public float Precision => precision;
-    public float Accuracy => accuracy;
-    public float AttackDistance => attackDistance;
-    public float Block_StrengthRatio => block_StrengthRatio;
+    public Weapon(int nftId, int equipableId, int quality) : base (WeaponsArray.GetInstance(equipableId).name, WeaponsArray.GetInstance(equipableId).strengthRatio, WeaponsArray.GetInstance(equipableId).derivatedStats, WeaponsArray.GetInstance(equipableId).attackType, WeaponsArray.GetInstance(equipableId).attackDistance, WeaponsArray.GetInstance(equipableId).block_DamagePercent, WeaponsArray.GetInstance(equipableId).pathToPrefab, WeaponsArray.GetInstance(equipableId).pathToAnimation, WeaponsArray.GetInstance(equipableId).weaponSkill)
+    {
+        Equipable = new Equipable(nftId,equipableId,quality);
+    }
+    public float Initiative => derivatedStats.initiative;
+    public float MultiHit => derivatedStats.multiHit;
+    public float Counterattack => derivatedStats.counterattack;
+    public float Evasion => derivatedStats.evasion;
+    public float Anticipate => derivatedStats.anticipate;
+    public float Block => derivatedStats.block;
+    public float Armor => derivatedStats.armor;
+    public float Disarm => derivatedStats.disarm;
+    public float Precision => derivatedStats.precision;
+    public float Accuracy => derivatedStats.accuracy;
 }

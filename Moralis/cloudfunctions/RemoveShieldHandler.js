@@ -11,11 +11,21 @@ Moralis.Cloud.beforeSave("RemoveShield", async(request) => {
     const rudoId = parseInt(request.object.get("rudoId"));
     query.equalTo("rudoId", rudoId);  
     const rudo = await query.first();
+    const shield = rudo.get("shield");
+
     rudo.unset("shield");
     rudo.save().then((rudo) => {
         logger.info('Shield unassigned with objectId: ' + rudo.id);
     }, (error) => {
         logger.info('Failed to unassign shield, with error code: ' + error.message);
+        SaveFailedTransaction(request);
+    });
+
+    shield.set("rudoOwner",-1);
+    shield.save().then((shield) => {
+        logger.info('rudoowner of shield unassigned with objectId: ' + shield.id);
+    }, (error) => {
+        logger.info('Failed to unassign rudoowner of shield, with error code: ' + error.message);
         SaveFailedTransaction(request);
     });
 })

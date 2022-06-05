@@ -1,7 +1,5 @@
-using Moralis.Platform.Objects;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using MoralisUnity.Platform.Objects;
 
 public class RudoMoralis : MoralisObject
 {
@@ -17,5 +15,6 @@ public class RudoMoralis : MoralisObject
     public PetMoralis pet { get; set; }
     public ShieldMoralis shield { get; set; }
     public List<WeaponMoralis> weapons { get; set; }
+    public List<int> skills { get; set; }
     public string owner { get; set; }
 }

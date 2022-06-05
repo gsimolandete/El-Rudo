@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using static GlobalVariables;
+using CharacterCreator2D;
 
 public abstract class FighterCombatVisual : FighterCombat
 {
@@ -11,6 +14,21 @@ public abstract class FighterCombatVisual : FighterCombat
 
     public FighterCombatVisual(Fighter fighter, TeamNum team) : base(fighter,team)
     {
+    }
+
+    public override void ModifyHP(float variation)
+    {
+        base.ModifyHP(variation);
+    }
+
+    public override void ModifyShieldHp(float variation)
+    {
+        base.ModifyShieldHp(variation);
+
+        if (ShieldHp <= 0)
+        {
+            fighterController.SelfDisarmShield();
+        }
     }
 
     protected override IEnumerator WaitUntilActionsEnded(FighterCombat target)
@@ -24,37 +42,49 @@ public abstract class FighterCombatVisual : FighterCombat
     public void InitializeRudoCombatVisual(GameObject rudoController, Vector3 thisRudoSpawn, Vector3 enemyRudoSpawn)
     {
         FighterController = rudoController.GetComponent<FighterController>();
-        FighterController.Initialize(thisRudoSpawn, enemyRudoSpawn);
+        FighterController.Initialize(thisRudoSpawn, enemyRudoSpawn, this is RudoCombatVisual ? this as RudoCombatVisual : null);
+
+        if (activeShield != null)
+            FighterController.YieldShield(activeShield);
     }
 
-    public override IEnumerator CompleteAttack(FighterCombat target, float damage, AttackInteraction attackInteraction, float targetInteractionDelay) 
+    protected override void BasicAttack(FighterCombat target, AttackPropertiesEnum[] attackPropertiesEnums = null) 
     {
-        CombatDynamicsInstance.StartCoroutine(base.CompleteAttack( target,  damage,  attackInteraction,  targetInteractionDelay));
-        FighterController.Attack();
-        switch (attackInteraction)
+        base.BasicAttack(target, attackPropertiesEnums);
+        FighterController.Attack((target as FighterCombatVisual).fighterController);
+    }
+    protected override void WeaponSkillAttack(FighterCombat target)
+    {
+        base.WeaponSkillAttack(target);
+        FighterController.WeaponSkillAttack((target as FighterCombatVisual).fighterController);
+    }
+    public override void GetHurt(float damage)
+    {
+        base.GetHurt(damage);
+        if (Hp > 0)
+            FighterController.BeingHurt();
+        else
+            FighterController.BeingDefeated();
+    }
+    public override DefenseInteraction Block(AttackProperties attacker)
+    {
+        DefenseInteraction ai = base.Block(attacker);
+
+        if (Hp > 0)
         {
-            case AttackInteraction.Clean:
-                yield return new WaitForSeconds(targetInteractionDelay);
-                if (target.Hp > 0)
-                    (target as FighterCombatVisual).FighterController.GetHurt();
-                else
-                {
-                    (CombatDynamicsInstance as CombatDynamicsVisual).LoadMainMenu.SetActive(true);
-                    (target as FighterCombatVisual).FighterController.GetDefeated();
-                }
-                break;
-            case AttackInteraction.Blocked:
-                if (target.Hp > 0)
-                    (target as FighterCombatVisual).FighterController.Block();
-                else
-                    (target as FighterCombatVisual).FighterController.GetDefeated();
-                break;
-            case AttackInteraction.Dodged:
-                (target as FighterCombatVisual).FighterController.Dodge();
-                break;
-            default:
-                break;
+            if(ai!= DefenseInteraction.None)
+                FighterController.Blocking();
         }
+        else
+            FighterController.BeingDefeated();
+
+        return ai;
+    }
+    public override void Dodge(AttackProperties attacker)
+    {
+        base.Dodge(attacker);
+
+        FighterController.Dodging();
     }
 
     public override void CompleteGetDisarmed(DisarmInteraction disarmInteraction)
@@ -63,7 +93,7 @@ public abstract class FighterCombatVisual : FighterCombat
         switch (disarmInteraction)
         {
             case DisarmInteraction.Forced:
-                fighterController.ForcedDisarm();
+                fighterController.Disarming();
                 break;
             case DisarmInteraction.Intentional:
                 fighterController.SelfDisarm();
@@ -71,26 +101,36 @@ public abstract class FighterCombatVisual : FighterCombat
             default:
                 break;
         }
-    }
 
+    }
     public override void MoveCharacterToSpawn()
     {
         FighterController.SetTargetPosition(FighterController.OwnSpawn);
     }
-
     public override void MoveCharacterToAttack(float attackDistance, FighterCombat target)
     {
-        GameObject rcvt = (target as RudoCombatVisual).FighterController.gameObject;
+        GameObject rcvt = (target as FighterCombatVisual).FighterController.gameObject;
         FighterController.SetTargetPosition(rcvt.transform.position + ((rcvt.transform.position - FighterController.gameObject.transform.position).x > 0 ? 
             new Vector3(-attackDistance, 0, 0) : 
             new Vector3(attackDistance, 0, 0)));
 
     }
-
     protected override void CompleteYieldWeapon()
     {
         base.CompleteYieldWeapon();
 
         fighterController.YieldWeapon(activeWeapon);
+        
     }
+    protected override void CompleteUseActiveSkill<T>(SkillsActiveStats<T> skillsActiveStats)
+    {
+        base.CompleteUseActiveSkill(skillsActiveStats);
+
+        fighterController.Invoke(skillsActiveStats.animationAddressable,0f);
+    }
+    //void parry()
+    //{
+    //    fighterController.ParryNextAttack();
+    //}
+
 }

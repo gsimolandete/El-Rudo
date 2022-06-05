@@ -5,30 +5,24 @@ using static GlobalVariables;
 
 public class WeaponStats
 {
-    [SerializeField]
-    protected float strengthRatio;
-    [SerializeField]
-    protected DerivatedStats derivatedStats;
-    [SerializeField]
-    protected AttackType weaponType;
-    [SerializeField]
-    protected float attackDistance, block_DamagePercent;
-    [SerializeField]
-    protected string pathToAddressable;
+    public readonly string name;
+    public readonly float strengthRatio;
+    public readonly DerivatedStats derivatedStats;
+    public readonly AttackType attackType;
+    public readonly float attackDistance, block_DamagePercent;
+    public readonly string pathToPrefab, pathToAnimation;
+    public readonly SkillsActiveWeaponStats weaponSkill;
 
-    public WeaponStats(float strengthRatio, DerivatedStats derivatedStats, AttackType weaponType, float attackDistance, float block_DamagePercent, string pathToAddressable)
+    public WeaponStats(string name, float strengthRatio, DerivatedStats derivatedStats, AttackType attackType, float attackDistance, float block_DamagePercent, string pathToPrefab, string pathToAnimation, SkillsActiveWeaponStats weaponSkill)
     {
+        this.name = name;
         this.strengthRatio = strengthRatio;
         this.derivatedStats = derivatedStats;
-        this.weaponType = weaponType;
+        this.attackType = attackType;
         this.attackDistance = attackDistance;
         this.block_DamagePercent = block_DamagePercent;
-        this.pathToAddressable = pathToAddressable;
+        this.pathToPrefab = pathToPrefab;
+        this.pathToAnimation = pathToAnimation;
+        this.weaponSkill = weaponSkill;
     }
-    public DerivatedStats DerivatedStats { get => derivatedStats; }
-    public float AttackDistance => defaultAttackDistance + attackDistance;
-    public float Block_DamagePercent => block_DamagePercent + emptyHandedBlockPercent;
-    public float StrengthRatio { get => strengthRatio; }
-    public AttackType WeaponType { get => weaponType; }
-    public string PathToAddressable { get => pathToAddressable; }
 }

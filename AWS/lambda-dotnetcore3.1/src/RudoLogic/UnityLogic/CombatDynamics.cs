@@ -4,58 +4,136 @@ using System.Diagnostics;
 using System;
 using static FighterCombat;
 using static ServerDifferentFunctions;
+using static GlobalVariables;
+using System.Threading.Tasks;
 
 public class CombatDynamics
 {
-    public bool randomSeed;
+    public bool randomSeed, showLogs= true;
     public int seed;
-    public AbstractRudo abstractRudo1;
-    public AbstractRudo abstractRudo2;
+    public Rudo inspectorRudo1, inspectorRudo2;
+    public static Rudo rudo1, rudo2;
 
-    FighterTeamList[] teamFighterList;
+    protected bool team1ended = false, team2ended = false;
+    protected float team1ExcessHealth = 0, team2ExcessHealth = 0;
+    protected int team1Wins = 0, team2Wins = 0, combatTurns = 0;
 
-    public CombatDynamics(int seed, AbstractRudo abstractRudo1, AbstractRudo abstractRudo2)
+    public bool Team1Ended { get => team1ended; set => team1ended = value; }
+    public bool Team2Ended { get => team2ended; set => team2ended = value; }
+    public int Team1Wins { get => team1Wins; set => team1Wins = value; }
+    public int Team2Wins { get => team2Wins; set => team2Wins = value; }
+
+    protected FighterTeamList[] teamFighterList;
+
+    public DebugVariables dv;
+
+    [System.Serializable]
+    public class DebugVariables
     {
-        randomSeed = false;
-        this.seed = seed;
-        this.abstractRudo1 = abstractRudo1;
-        this.abstractRudo2 = abstractRudo2;
+        public int
+           team1NumberTurns, team2NumberTurns, team1NumberAnticipate, team2NumberAnticipate, team1NumberCounterAttack, team2NumberCounterAttack, team1NumberEvasion, team2NumberEvasion, team1NumberBlock,
+           team2NumberBlock, team1NumberYieldWeapon, team2NumberYieldWeapon, team1NumberAttacks, team2NumberAttacks;
+        public DebugVariables()
+        {
+            team1NumberTurns = 0; team2NumberTurns = 0;
+            team1NumberTurns = 0; team2NumberTurns = 0; team1NumberAnticipate = 0; team2NumberAnticipate = 0; team1NumberCounterAttack = 0; team2NumberCounterAttack = 0; team1NumberEvasion = 0;
+            team2NumberEvasion = 0; team1NumberBlock = 0; team2NumberBlock = 0; team1NumberYieldWeapon = 0; team2NumberYieldWeapon = 0; team1NumberAttacks = 0; team2NumberAttacks = 0;
+        }
     }
 
-    public void Initialize()
+    public CombatDynamics(bool randomSeed, Rudo abstractRudo1, Rudo abstractRudo2, int seed = 0)
     {
+        this.randomSeed = randomSeed;
+        this.seed = seed;
+        CombatDynamics.rudo1 = abstractRudo1;
+        CombatDynamics.rudo2 = abstractRudo2;
+    }
+
+    protected virtual void InitializeScript()
+    {
+        CombatDynamicsInstance = this;
+        ShowLogs = showLogs;
+        DeadKeepFighting = false;
+        Console.WriteLine("xd");
+    }
+
+    protected virtual void PrepareFight()
+    {
+        Console.WriteLine("xd2");
+
         if(randomSeed)
             seed = (int)(RandomSingleton.NextDouble() * int.MaxValue);
 
+        print2("selected seed: "+ seed);
         RandomSingleton.Instance.Random = new System.Random(seed);
 
         teamFighterList = new FighterTeamList[2];
 
-        teamFighterList[0] = abstractRudo1.GetTeam(TeamNum.Team1);
-        teamFighterList[1] = abstractRudo2.GetTeam(TeamNum.Team2);
+        if (rudo1 == null || rudo2 == null)
+        {
+            rudo1 = inspectorRudo1;
+            rudo2 = inspectorRudo2;
+
+            for (int u = 0; u < rudo1.Weapons.Count; u++)
+            {
+                rudo1.Weapons[u] = new Weapon(0, rudo1.Weapons[u].Equipable.equipableId, 0);
+            }
+
+            if (rudo1.Shield != null && rudo1.Shield.Equipable.equipableId >= 0)
+                rudo1.Shield = new Shield(0, rudo1.Shield.Equipable.equipableId, 0);
+            else
+                rudo1.Shield = null;
+
+            if (rudo1.Pet != null && rudo1.Pet.Equipable.equipableId >= 0)
+                rudo1.Pet = new Pet(0, rudo1.Shield.Equipable.equipableId, 0);
+            else
+                rudo1.Pet = null;
+
+            for (int i = 0; i < rudo2.Weapons.Count; i++)
+            {
+                rudo2.Weapons[i] = new Weapon(0, rudo2.Weapons[i].Equipable.equipableId, 0);
+            }
+
+            if (rudo2.Shield != null && rudo2.Shield.Equipable.equipableId >= 0)
+                rudo2.Shield = new Shield(0, rudo2.Shield.Equipable.equipableId, 0);
+            else
+                rudo2.Shield = null;
+
+            if (rudo2.Pet != null && rudo2.Pet.Equipable.equipableId >= 0)
+                rudo2.Pet = new Pet(0, rudo2.Shield.Equipable.equipableId, 0);
+            else
+                rudo2.Pet = null;
+        }
+
+        GetTeams();
     }
 
-    public void StartCombat()
+    protected virtual void GetTeams()
     {
-        Stopwatch  stopwatch = Stopwatch.StartNew();
-        stopwatch.Start();
+        teamFighterList[0] = rudo1.GetTeam(TeamNum.Team1);
+        teamFighterList[1] = rudo2.GetTeam(TeamNum.Team2);
+    }
 
-        print2("seed:" + seed);
+    public virtual void StartCombat()
+    {
+        InitializeScript();
+        Fight();
+    }
 
-        Initialize();
-        while (!RudoDefeated())
+    protected virtual void Fight()
+    {
+        PrepareFight();
+
+        while (!CombatEnded())
         {
             FighterCombat attacker = FindNextAttacker();
             FighterCombat target = FindNextTarget(attacker);
-            GlobalVariables.PrintWithColor("#46FF00", "###### " + attacker.Fighter.FighterName + " attacks ######");
-            attacker.Fighter.NextMove(attacker, target);
+            PrintWithColor("###### " + attacker.Fighter.FighterName + " attacks ######", "#46FF00");
+            attacker.NextMove(target);
         }
-
-        stopwatch.Stop();
-        print2(stopwatch.ElapsedMilliseconds);
     }
 
-    FighterCombat FindNextAttacker()
+    virtual protected FighterCombat FindNextAttacker()
     {
         float closestTimeToAttack = 100000;
         List<FighterCombat> nextAttackers = new List<FighterCombat>();
@@ -64,7 +142,7 @@ public class CombatDynamics
         {
             for (int ii = 0; ii < teamFighterList[i].Count; ii++)
             {
-                float a = GlobalVariables.TimeToAttack(teamFighterList[i][ii]);
+                float a = TimeToAttack(teamFighterList[i][ii]);
                 if (closestTimeToAttack >= a)
                 {
                     //SAME OPTIMIZE
@@ -93,11 +171,10 @@ public class CombatDynamics
                     if (fighterCombat == teamFighterList[i][ii])
                         teamFighterList[i][ii].TurnMeter = 0;
                     else
-                        teamFighterList[i][ii].TurnMeter += GlobalVariables.MeterIncrement(teamFighterList[i][ii], closestTimeToAttack);
+                        teamFighterList[i][ii].TurnMeter += MeterIncrement(teamFighterList[i][ii], closestTimeToAttack);
                 }
             }
         }
-
         return fighterCombat;
     }
 
@@ -105,26 +182,39 @@ public class CombatDynamics
     {
         if (attacker.Team == TeamNum.Team2)
         {
-            return teamFighterList[0][(int)(RandomSingleton.NextDouble() * (teamFighterList[0].Count - 1))];
+            return teamFighterList[0][(int)(RandomSingleton.NextDouble() * (teamFighterList[0].Count))];
         }
         else
         {
-            return teamFighterList[1][(int)(RandomSingleton.NextDouble()*(teamFighterList[1].Count - 1))];
+            return teamFighterList[1][(int)(RandomSingleton.NextDouble()*(teamFighterList[1].Count))];
         }
     }
 
-    bool RudoDefeated()
+    protected virtual bool CombatEnded()
     {
+        if (teamFighterList[0].pet != null && teamFighterList[0].pet.Hp <= 0)
+            teamFighterList[0].pet = null;
+
+        if (teamFighterList[1].pet != null && teamFighterList[1].pet.Hp <= 0)
+            teamFighterList[1].pet = null;
+
         if (teamFighterList[0].Rudo.Hp <= 0)
         {
-            GlobalVariables.PrintWithColor("#FFFFFF", teamFighterList[1].Rudo.Fighter.FighterName + " won");
+            PrintWithColor(teamFighterList[1].Rudo.Fighter.FighterName + " won", "#FFFFFF");
+            OnCombatEnded();
             return true;
         }
         else if (teamFighterList[1].Rudo.Hp <= 0)
         {
-            GlobalVariables.PrintWithColor("#FFFFFF", teamFighterList[0].Rudo.Fighter.FighterName + " won");
+            PrintWithColor(teamFighterList[0].Rudo.Fighter.FighterName + " won", "#FFFFFF");
+            OnCombatEnded();
             return true;
         }
         return false;
+    }
+
+    protected virtual void OnCombatEnded()
+    {
+
     }
 }

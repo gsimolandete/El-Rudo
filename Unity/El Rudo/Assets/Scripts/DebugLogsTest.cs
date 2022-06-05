@@ -4,7 +4,6 @@ namespace DebugStuff
 {
     public class DebugLogsTest : MonoBehaviour
     {
-        #if !UNITY_EDITOR
         public static string myLog = "";
         private string output;
         private string stack;
@@ -40,6 +39,5 @@ namespace DebugStuff
                 myLog = GUI.TextArea(new Rect(10, 10, Screen.width/4,  Screen.height - 10), myLog, style);
             }
         }
-        #endif
     }
 }

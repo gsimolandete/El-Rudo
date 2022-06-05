@@ -2,134 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using static GlobalVariables;
 
-public abstract class Fighter 
+[System.Serializable]
+public abstract class Fighter
 {
-    protected float strength, agility, velocity, vitality;
-    private float initiative, multiHit, counterattack, evasion, anticipate, block, armor, disarm, precision, accuracy;
     protected string fighterName;
-    private float attackDistance;
-    private AttackType attackType = AttackType.Melee;
+    protected BasicStats basicStats;
+    protected DerivatedStats derivatedStats;
 
-    protected Fighter()
-    {
-        Initialize();
-    }
+    protected Shield shield;
+    protected List<Weapon> weapons;
 
-    public void Initialize(float initiative = 0, float multiHit = 15, float counterattack = 15,float evasion = 10,float anticipate = 5,float block = 20, float armor=0.5f,float disarm = 0,float precision = 0,float accuracy = 0)
+    protected Fighter(string _name, float _vitality, float _strength, float _velocity, float _agility, List<Weapon> _weapons, Shield _shield)
     {
-        this.initiative = initiative; this.multiHit = multiHit; this.counterattack = counterattack; this.evasion = evasion; this.anticipate = anticipate;
-        this.block = block; this.armor = armor; this.disarm = disarm; this.precision = precision; this.accuracy = accuracy;
+        fighterName = _name;
+        basicStats = new BasicStats
+        {
+            vitality = _vitality,
+            strength = _strength,
+            agility = _agility,
+            velocity = _velocity
+        };
+        weapons = _weapons;
+        shield = _shield;
     }
 
     //PRINCIPALS
-    public virtual float Strength { get => strength; }
-    public virtual float Agility { get => agility; }
-    public virtual float Velocity { get => velocity; }
-    public virtual float Vitality { get => vitality; }
+    public virtual float Strength { get => basicStats.strength; }
+    public virtual float Agility { get => basicStats.agility; }
+    public virtual float Velocity { get => basicStats.velocity; }
+    public virtual float Vitality { get => basicStats.vitality; }
 
     //DERIVATEDS
-    public virtual float Initiative { get => initiative + velocity * velocity_Initiative;}
-    public virtual float MultiHit { get => multiHit + agility * agility_Multihit;}
-    public virtual float Counterattack { get => counterattack + agility * agility_CounterAttack; }
-    public virtual float Evasion { get => evasion + agility * agility_Evasion;}
-    public virtual float Anticipate { get => anticipate + velocity * velocity_Anticipation;}
-    public virtual float Block { get => block;}
-    public virtual float Armor { get => armor;}
-    public virtual float Disarm { get => disarm;}
-    public virtual float Precision { get => precision + agility * agility_Evasion; }
-    public virtual float Accuracy { get => accuracy;}
-
-    //ATTACK INFO
-    protected float AttackDistance { get => attackDistance; set => attackDistance = value; }
-    protected AttackType AttackType { get => attackType; set => attackType = value; }
+    public List<Weapon> Weapons { get => weapons; }
+    public float Initiative { get { return derivatedStats.initiative; } }
+    public float MultiHit { get { return derivatedStats.multiHit; } }
+    public float Counterattack { get { return derivatedStats.counterattack; } }
+    public float Evasion { get { return derivatedStats.evasion; } }
+    public float Anticipate { get { return derivatedStats.anticipate; } }
+    //if shield get shield block rate, if not shield but weapon get weapon block rate
+    public float Block { get { return derivatedStats.block; } } 
+    public float Armor { get { return derivatedStats.armor; } }
+    public float Disarm { get { return derivatedStats.disarm; } }
+    public float Precision { get { return derivatedStats.precision; } }
+    public float Accuracy { get { return derivatedStats.accuracy; } }
     public string FighterName { get => fighterName; set => fighterName = value; }
+    public Shield Shield { get => shield; set => shield = value; }
 
-    public void ConsiderAnticipateAttack(FighterCombat target)
-    {
-        if (Anticipate <= RandomSingleton.NextDouble()*100f)
-            return;
-
-        PrintWithColor("#B80000", " ANTICIPATE ");
-        Attack(target);
-    }
-    public void ConsiderCounterAttack(FighterCombat target)
-    {
-        if (Counterattack <= RandomSingleton.NextDouble()*100f)
-            return;
-
-        PrintWithColor("#B80000", " COUNTER ");
-        Attack(target);
-    }
-    public bool Evaded(FighterCombat attacker, FighterCombat target)
-    {
-        if (Evasion - attacker.Fighter.Precision <= RandomSingleton.NextDouble() * 100f)
-            return false;
-
-        PrintWithColor("#B80000", " EVASION ");
-        return true;
-    }
-    public bool Blocked(FighterCombat attacker, FighterCombat target)
-    {
-        if (Block - attacker.Fighter.Accuracy <= RandomSingleton.NextDouble() * 100f)
-            return false;
-
-        PrintWithColor("#B80000", " BLOCKED ");
-        return true;
-    }
-    protected void Attack(FighterCombat target)
-    {
-        float damage = CalculateDamage();
-
-        target.ModifyHP(-damage);
-
-        CompleteAttack(target, damage);
-    }
-    protected virtual void BlockedAttack(FighterCombat attacker, FighterCombat target)
-    {
-        float damage = CalculateDamage();
-        damage -= emptyHandedBlockedDamage + strength_Block * Strength;
-
-        target.ModifyHP(-damage);
-
-        attacker.Fighter.CompleteAttack(target, damage);
-    }
-    protected void EvadedAttack(FighterCombat attacker, FighterCombat target)
-    {
-        attacker.Fighter.CompleteAttack(target, 0);
-    }
-    protected abstract float CalculateDamage();
-    public abstract void CompleteAttack(FighterCombat target, float damage);
-    public abstract void MoveCharacter(float attackDistance, FighterCombat fighter);
-    public abstract void GetDisarmed();
-    public virtual void NextMove(FighterCombat attacker, FighterCombat target)
-    {
-        if (attackType == AttackType.Melee)
-        {
-            MoveCharacter(attackDistance, target);
-            target.Fighter.ConsiderAnticipateAttack(attacker);
-        }
-
-        do //consecutive attacks
-        {
-            if (target.Fighter.Evaded(attacker, target))
-            {
-                EvadedAttack(attacker, target);
-            }
-            else if (target.Fighter.Blocked(attacker, target))
-            {
-                BlockedAttack(attacker, target);
-            }
-            else
-            {
-                Attack(target);
-            }
-
-            if(Disarm > RandomSingleton.NextDouble() * 100f)
-                GetDisarmed();
-
-            if (attackType==AttackType.Melee && target.Hp > 0)
-                target.Fighter.ConsiderCounterAttack(attacker);
-
-        } while (attacker.Hp > 0 && MultiHit > RandomSingleton.NextDouble() * 100f);
-    }
+    
 }

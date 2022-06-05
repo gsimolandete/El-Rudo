@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class LoadMiniEquipable : MonoBehaviour
 {
     [SerializeField]
-    public TMP_Text nftId,equipableId,quality;
+    public TMP_Text nftId,rudoOwnerId,quality;
     [SerializeField]
     public Image image;
     [SerializeField]
@@ -31,6 +31,9 @@ public class LoadMiniEquipable : MonoBehaviour
         }
         nftId.text = equipable.nftId.ToString();
         quality.text = equipable.weaponQuality.ToString();
-        equipableId.text = equipable.weaponId.ToString();
+        rudoOwnerId.text = equipable.rudoOwner == -1 ? "" : equipable.rudoOwner.ToString();
+
+        if (equipable.rudoOwner != -1)
+            GetComponent<Button>().interactable = false;
     }
 }

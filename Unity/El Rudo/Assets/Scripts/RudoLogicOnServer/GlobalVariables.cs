@@ -21,26 +21,29 @@ public static class GlobalVariables
     public const int MAXIMUMRUDOS = 10;
 
     public const float  turnMeter = 100f, // full capacity of turn metter
-                        strength_noWeaponDamage = 1f / 350f,
-                        velocity_TurnMeter = 1f / 200f, //rate at wich the turn meter fills, depends on the velocity
-                        velocity_Initiative = 1f / 300f,
-                        velocity_Anticipation = 1f / 400f,
-                        velocity_Multihit = 1f / 400f,
-                        agility_CounterAttack = 1f / 100f,
-                        agility_Evasion = 1f / 100f,
+                        strength_noWeaponDamage = 1f / 5f,
+                        velocity_TurnMeter = 1f / 1000f, //rate at wich the turn meter fills, depends on the velocity
+                        velocity_Initiative = 1f / 1200f,
+                        velocity_Anticipation = 1f / 8000f,
+                        agility_Multihit = 1f / 8000f,
+                        agility_CounterAttack = 1f / 2000f,
+                        agility_Evasion = 1f / 2000f,
                         emptyHandedBlockPercent = 0.1f,
                         BlockFlatDamage = 2f,
-                        defaultAttackDistance = 1.6f,
+                        defaultAttackDistance = 2f,
                         defaultInitiative = 0,
                         defaultMultiHit = 0.15f,
-                        defaultCounterattack = 0.15f,
-                        defaultEvasion = 0.10f,
+                        defaultCounterattack = 0.2f,
+                        defaultEvasion = 0.15f,
                         defaultAnticipate = 0.05f,
-                        defaultBlock = 0.20f,
-                        defaultArmor = 0.9f,
-                        defaultDisarm = 0,
+                        defaultBlock = 0.25f,
+                        defaultArmor = 0,
+                        defaultDisarm = 0.1f,
                         defaultPrecision = 0,
-                        defaultAccuracy = 0;
+                        defaultAccuracy = 0,
+                        defaultHP = 150f,
+                        defaultDamage = 10f,
+                        weaponFillAmmountPerTurn = 5;
 
     [System.Serializable]
     public struct BasicStats { 
@@ -73,10 +76,12 @@ public static class GlobalVariables
         }
     }
     public enum AttackType { Melee, Ranged }
-    public enum AttackInteraction { Clean, Blocked, Dodged }
+    public enum AttackPropertiesEnum { NoCounter, NoDodge}
+    public enum DefenseInteraction { Clean, Blocked, Dodged, None }
     public enum DisarmInteraction { Forced, Intentional }
-    public enum Rarities { Common, Rare, Epic, Legendary}
-    public static float MaxHP(Fighter fighter) { return 200f + fighter.Vitality; }
+    public enum SkillInteractions { DisarmAttacker, DisarmTarget }
+    public enum Rarities { Common, Rare, Epic, Legendary }
+    public static float MaxHP(Fighter fighter) { return defaultHP + fighter.Vitality; }
     public static float TimeToAttack(FighterCombat fc) { return (turnMeter - fc.TurnMeter) / AttackMeterVelocity(fc); }
     public static float MeterIncrement(FighterCombat fc, float time) { return AttackMeterVelocity(fc) * time; }
     static float AttackMeterVelocity(FighterCombat fc) { return (1 + velocity_TurnMeter * fc.Fighter.Velocity); }

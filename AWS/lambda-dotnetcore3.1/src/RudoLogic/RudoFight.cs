@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System;
 
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -16,10 +17,10 @@ namespace RudoNamespace
 
         public APIGatewayProxyResponse StartFight(ILambdaContext context)
         {
-            //RudoLog rudoLog1 = aCalls.GetRudoById(0) as RudoLog;
-            //RudoLog rudoLog2 = aCalls.GetRudoById(1) as RudoLog;
-            //CombatDynamics c = new CombatDynamics(10,rudoLog1,rudoLog2);
-            //c.StartCombat();
+            Rudo rudo1 = new Rudo(0,0,"rudo1",0,25,25,25,25,new List<Weapon>{new Weapon(0,0,0)},null, new Shield(0,0,0), new List<int>(){ 1, 0});
+            Rudo rudo2 = new Rudo(0,0,"rudo2",0,25,25,25,25,new List<Weapon>{new Weapon(0,1,0)},null, new Shield(0,0,0), new List<int>(){ 1, 0});
+            CombatDynamics c = new CombatDynamics(false,rudo1,rudo2,0);
+            c.StartCombat();
 
             var body = new Dictionary<string, string>();
 

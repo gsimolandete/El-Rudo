@@ -5,11 +5,16 @@ using UnityEngine;
 public class FighterTeamList
 {
     FighterCombat rudo;
-    List<FighterCombat> pets;
+    public FighterCombat pet;
 
-    public List<FighterCombat> Pets { get => pets; set => pets = value; }
+    public FighterTeamList(FighterCombat rudo, FighterCombat pet)
+    {
+        this.rudo = rudo;
+        this.pet = pet;
+    }
+
     public FighterCombat Rudo { get => rudo; set => rudo = value; }
-    public int Count { get => pets.Count + 1; }
+    public int Count { get => pet != null ? 2 : 1; }
     public FighterCombat this[int index]
     {
         get
@@ -17,7 +22,7 @@ public class FighterTeamList
             if (index == 0)
                 return rudo;
             else 
-                return pets[index - 1];
+                return pet;
         }
     }
 }

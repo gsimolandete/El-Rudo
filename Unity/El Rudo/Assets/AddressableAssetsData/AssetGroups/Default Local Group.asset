@@ -21,24 +21,70 @@ MonoBehaviour:
     m_Address: Assets/AssetStore/Wizard - 2D Character/Wizard.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: a22ddbf6cbcbf1f44820f4655baa4a04
-    m_Address: Assets/TestAssets/Weapons/sword_01.prefab
+  - m_GUID: 5787ce99fb2509143b7748838fc0e1fd
+    m_Address: Assets/TestAssets/Weapons/EquipableSpawnProperties.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 8dee043865b153d4eb62b3d8824cc7de
-    m_Address: Assets/TestAssets/Weapons/nose.prefab
+  - m_GUID: 332b21a684312b34798ace98affe4eed
+    m_Address: Assets/TestAssets/Pets/Wizard/MonD_01.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 6a3348af53722a84eb934ca67dec914c
-    m_Address: Assets/TestAssets/Weapons/maza.prefab
+  - m_GUID: a7c4c85a51d005f41867125e8ec6fdd7
+    m_Address: Assets/CharacterCreator2D/Examples/Exa.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 923f688c73a5ea54a9decc913d333e40
-    m_Address: Assets/TestAssets/Weapons/katana.prefab
+  - m_GUID: 4c7824dfaa73055468a0815f1da737cf
+    m_Address: Assets/TestAssets/Rudos/Rudo2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 1066b4bfbb87a894892414ca724bc0d2
-    m_Address: Assets/TestAssets/Weapons/cuchillo.prefab
+  - m_GUID: e21ddbf8848372e49968bdc520e56397
+    m_Address: Assets/CharacterCreator2D/Data/Animations/Base/Attack Main Hand 1.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 17fc6217d94faee4db081342e24688b9
+    m_Address: s/TestAssets/Rudos/Rudo2Anims/Attack Backwards.anim.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8c9396f2384787b429ae10e3813f080c
+    m_Address: Assets/TestAssets/Rudos/AttackBackwards.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5a51e808731f6e94c850757ae264300b
+    m_Address: Assets/AssetStore/Wizard - 2D Character/Animations/Attack.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8b3d2044a2d1598408817d4f9bf5e50a
+    m_Address: Assets/CharacterCreator2D/Sprites/Fantasy/Weapon/One Handed/Sword
+      04.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ea82239043860cd4ba15362f8fc942c6
+    m_Address: Assets/TestAssets/Shield/Shield1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a7ac5b700eef365418c9309a9054ce1d
+    m_Address: Assets/TestAssets/Rudos/PunchAttack.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 33ae0437abd1bae4a89e8f1b62255b8a
+    m_Address: Assets/TestAssets/Rudos/SampleWeaponSkill.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f61c1e383bd1d2446b91b2785b990f37
+    m_Address: Assets/TestAssets/Rudos/SampleWeaponSkill2.anim
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 408db7ffa59d10d42a486c51a36ee544
+    m_Address: Assets/CharacterCreator2D/Sprites/Fantasy/Weapon/One Handed/Sword
+      01.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 2ee95f66794252d4aa19215286e8c062
+    m_Address: Assets/TestAssets/Weapons/SampleSword.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 2e8f501196f9bf5458cf6d39cfc86dae
+    m_Address: Assets/TestAssets/Weapons/Animations/weaponSpawn.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

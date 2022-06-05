@@ -13,6 +13,7 @@ public class CombatDynamics : MonoBehaviour
 {
     public bool randomSeed, showLogs;
     public int seed;
+    public Rudo inspectorRudo1, inspectorRudo2;
     public static Rudo rudo1, rudo2;
 
     protected bool team1ended = false, team2ended = false;
@@ -62,9 +63,46 @@ public class CombatDynamics : MonoBehaviour
         if(randomSeed)
             seed = (int)(RandomSingleton.NextDouble() * int.MaxValue);
 
+        print2("selected seed: "+ seed);
         RandomSingleton.Instance.Random = new System.Random(seed);
 
         teamFighterList = new FighterTeamList[2];
+
+        if (rudo1 == null || rudo2 == null)
+        {
+            rudo1 = inspectorRudo1;
+            rudo2 = inspectorRudo2;
+
+            for (int u = 0; u < rudo1.Weapons.Count; u++)
+            {
+                rudo1.Weapons[u] = new Weapon(0, rudo1.Weapons[u].Equipable.equipableId, 0);
+            }
+
+            if (rudo1.Shield != null && rudo1.Shield.Equipable.equipableId >= 0)
+                rudo1.Shield = new Shield(0, rudo1.Shield.Equipable.equipableId, 0);
+            else
+                rudo1.Shield = null;
+
+            if (rudo1.Pet != null && rudo1.Pet.Equipable.equipableId >= 0)
+                rudo1.Pet = new Pet(0, rudo1.Shield.Equipable.equipableId, 0);
+            else
+                rudo1.Pet = null;
+
+            for (int i = 0; i < rudo2.Weapons.Count; i++)
+            {
+                rudo2.Weapons[i] = new Weapon(0, rudo2.Weapons[i].Equipable.equipableId, 0);
+            }
+
+            if (rudo2.Shield != null && rudo2.Shield.Equipable.equipableId >= 0)
+                rudo2.Shield = new Shield(0, rudo2.Shield.Equipable.equipableId, 0);
+            else
+                rudo2.Shield = null;
+
+            if (rudo2.Pet != null && rudo2.Pet.Equipable.equipableId >= 0)
+                rudo2.Pet = new Pet(0, rudo2.Shield.Equipable.equipableId, 0);
+            else
+                rudo2.Pet = null;
+        }
 
         GetTeams();
     }
@@ -146,16 +184,22 @@ public class CombatDynamics : MonoBehaviour
     {
         if (attacker.Team == TeamNum.Team2)
         {
-            return teamFighterList[0][(int)(RandomSingleton.NextDouble() * (teamFighterList[0].Count - 1))];
+            return teamFighterList[0][(int)(RandomSingleton.NextDouble() * (teamFighterList[0].Count))];
         }
         else
         {
-            return teamFighterList[1][(int)(RandomSingleton.NextDouble()*(teamFighterList[1].Count - 1))];
+            return teamFighterList[1][(int)(RandomSingleton.NextDouble()*(teamFighterList[1].Count))];
         }
     }
 
     protected virtual bool CombatEnded()
     {
+        if (teamFighterList[0].pet != null && teamFighterList[0].pet.Hp <= 0)
+            teamFighterList[0].pet = null;
+
+        if (teamFighterList[1].pet != null && teamFighterList[1].pet.Hp <= 0)
+            teamFighterList[1].pet = null;
+
         if (teamFighterList[0].Rudo.Hp <= 0)
         {
             PrintWithColor(teamFighterList[1].Rudo.Fighter.FighterName + " won", "#FFFFFF");

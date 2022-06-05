@@ -25,4 +25,12 @@ Moralis.Cloud.beforeSave("SetShield", async(request) => {
         logger.info('Failed to assign shield, with error code: ' + error.message);
         SaveFailedTransaction(request);
     });
+
+    shield.set("rudoOwner", rudo.get("rudoId"));
+    shield.save().then((shield) => {
+        logger.info('Rudo owner of shield assigned with objectId: ' + shield.id);
+    }, (error) => {
+        logger.info('Failed to assign rudo owner to shield, with error code: ' + error.message);
+        SaveFailedTransaction(request);
+    });
 })

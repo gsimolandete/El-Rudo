@@ -1,30 +1,38 @@
-using Moralis.Platform.Objects;
-using Moralis.Web3Api.Models;
-using MoralisWeb3ApiSdk;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using WalletConnectSharp.Unity;
 using static GlobalVariables;
-using Nethereum.Hex.HexTypes;
 using System;
-using Moralis.Platform.Queries;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using MoralisUnity;
+using MoralisUnity.Platform.Queries;
+using Nethereum.Hex.HexTypes;
+using MoralisUnity.Kits.AuthenticationKit;
+using TMPro;
+using MoralisUnity.Web3Api.Models;
 
 public class CustomMainMenuScript : MonoBehaviour
 {
-    public MainMenuScript menuScript;
+    [SerializeField]
+    private GameObject authenticationKitObject = null;
+    private AuthenticationKit authKit = null;
+
     public WalletConnect walletConnect;
-    public GameObject qrMenu;
     public GameObject miniRudoDisplayTemplate;
     public GameObject miniEquipableDisplayTemplate;
     public List<GameObject> menus;
-    public GameObject connectWalletMenu;
     public GameObject header;
+    public GameObject connectMenu;
     public static List<Rudo> ownRudos;
+    public TMP_Text maticBalance;
 
+    private void Start()
+    {
+        authKit = authenticationKitObject.GetComponent<AuthenticationKit>();
+    }
 
     public void NavigateTo(GameObject menu)
     {
@@ -55,17 +63,17 @@ public class CustomMainMenuScript : MonoBehaviour
 
     public async Task<List<T>> GetEquipables<T>() where T : EquipableMoralis
     {
-
-        MoralisQuery<T> query = MoralisInterface.GetClient().Query<T>().WhereEqualTo("owner", MoralisInterface.GetUser().ethAddress);
-        List<T> result = await query.FindAsync() as List<T>;
-
-        return result;
+        MoralisQuery<T> q = await Moralis.Query<T>();
+        q = q.WhereEqualTo("owner", (await Moralis.GetUserAsync()).ethAddress);
+        return  await q.FindAsync() as List<T>;
     }
 
     public async Task<List<Rudo>> GetRudos()
     {
-        MoralisQuery<RudoMoralis> query = MoralisInterface.GetClient().Query<RudoMoralis>().WhereEqualTo("owner", MoralisInterface.GetUser().ethAddress);
-        List<RudoMoralis> result = await query.FindAsync() as List<RudoMoralis>;
+        MoralisQuery<RudoMoralis> q = await Moralis.Query<RudoMoralis>();
+        q = q.WhereEqualTo("owner", (await Moralis.GetUserAsync()).ethAddress);
+        List<RudoMoralis> result = await q.FindAsync() as List<RudoMoralis>;
+
         List<Rudo> rudoList = new List<Rudo>();
 
         for (int i = 0; i < result.Count; i++)
@@ -79,8 +87,9 @@ public class CustomMainMenuScript : MonoBehaviour
     }
     public async Task<Rudo> GetRudo(int rudoId)
     {
-        MoralisQuery<RudoMoralis> query = MoralisInterface.GetClient().Query<RudoMoralis>().WhereEqualTo("rudoId", rudoId);
-        List<RudoMoralis> result = await query.FindAsync() as List<RudoMoralis>;
+        MoralisQuery<RudoMoralis> q = await Moralis.Query<RudoMoralis>();
+        q = q.WhereEqualTo("rudoId", rudoId);
+        List<RudoMoralis> result = await q.FindAsync() as List<RudoMoralis>;
 
         return await ProcessRudo(result[0]);
     }
@@ -96,35 +105,43 @@ public class CustomMainMenuScript : MonoBehaviour
             {
                 aaaa[u] = result.weapons[u].objectId.ToString();
             }
-            MoralisQuery<WeaponMoralis> queryWeapons = MoralisInterface.GetClient().Query<WeaponMoralis>().WhereContainedIn("objectId", aaaa);
-            List<WeaponMoralis> resultWeapon = await queryWeapons.FindAsync() as List<WeaponMoralis>;
+            List<WeaponMoralis> resultWeapon = new List<WeaponMoralis>();
+            for (int u = 0; u < result.weapons.Count; u++)
+            {
+                MoralisQuery<WeaponMoralis> q = await Moralis.Query<WeaponMoralis>();
+                q = q.WhereEqualTo("objectId", aaaa[u]);
+                resultWeapon.Add((await q.FindAsync() as List<WeaponMoralis>)[0]);
+
+            }
+
 
             for (int u2 = 0; u2 < resultWeapon.Count; u2++)
             {
-                string pathToAddressable = "";
-                weapons.Add(new Weapon(resultWeapon[u2].nftId, resultWeapon[u2].weaponId, resultWeapon[u2].weaponQuality, pathToAddressable, WeaponsArray.GetInstance(resultWeapon[u2].weaponId)));
+                weapons.Add(new Weapon(resultWeapon[u2].nftId, resultWeapon[u2].weaponId, resultWeapon[u2].weaponQuality));
             }
         }
 
         Pet pet = null;
         if (result.pet != null)
         {
-            MoralisQuery<PetMoralis> queryPet = MoralisInterface.GetClient().Query<PetMoralis>().WhereEqualTo("objectId", result.pet.objectId);
-            List<PetMoralis> resultPet = await queryPet.FindAsync() as List<PetMoralis>;
-            string pathToAddressable = "";
-            pet = resultPet.Count > 0 ? new Pet(resultPet[0].nftId, resultPet[0].weaponId, resultPet[0].weaponQuality, pathToAddressable, "pet", 5, 5, 5, 5) : null;
+            MoralisQuery<PetMoralis> q = await Moralis.Query<PetMoralis>();
+            q = q.WhereEqualTo("objectId", result.pet.objectId);
+            List<PetMoralis> resultPet = await q.FindAsync() as List<PetMoralis>;
+
+            pet = resultPet.Count > 0 ? new Pet(resultPet[0].nftId, resultPet[0].weaponId, resultPet[0].weaponQuality) : null;
         }
 
         Shield shield = null;
         if (result.shield != null)
         {
-            MoralisQuery<ShieldMoralis> queryShield = MoralisInterface.GetClient().Query<ShieldMoralis>().WhereEqualTo("objectId", result.shield.objectId);
-            List<ShieldMoralis> resultShield = await queryShield.FindAsync() as List<ShieldMoralis>;
-            string pathToAddressable = "";
-            shield = resultShield.Count > 0 ? new Shield(resultShield[0].nftId, resultShield[0].weaponId, resultShield[0].weaponQuality, pathToAddressable) : null;
+            MoralisQuery<ShieldMoralis> q = await Moralis.Query<ShieldMoralis>();
+            q = q.WhereEqualTo("objectId", result.shield.objectId);
+            List<ShieldMoralis> resultShield = await q.FindAsync() as List<ShieldMoralis>;
+
+            shield = resultShield.Count > 0 ? new Shield(resultShield[0].nftId, resultShield[0].weaponId, resultShield[0].weaponQuality) : null;
         }
 
-        return new Rudo(result.rudoId, result.experience, result.name, result.level, result.vitality, result.strength, result.velocity, result.agility, weapons, pet, shield);
+        return new Rudo(result.rudoId, result.experience, result.name, result.level, result.vitality, result.strength, result.velocity, result.agility, weapons, pet, shield, result.skills == null ? new List<int>() : result.skills);
     }
     public List<GameObject> CreateMiniEquipableDisplay<T>(List<T> result) where T : EquipableMoralis
     {
@@ -146,7 +163,7 @@ public class CustomMainMenuScript : MonoBehaviour
         {
             GameObject go;
             go = Instantiate(miniRudoDisplayTemplate);
-            go.GetComponent<LoadMiniRudoDisplay>().InitializeMini(result[i],this,menus[5]);
+            go.GetComponent<LoadMiniRudoDisplay>().InitializeMini(result[i],this,menus[4]);
             gol.Add(go);
         }
         return gol;
@@ -171,43 +188,43 @@ public class CustomMainMenuScript : MonoBehaviour
     public static async void MintRudo()
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(RUDO_CONTRACT_ADDRESS, RUDO_ABI, "_createRudo2", new object[0], xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(RUDO_CONTRACT_ADDRESS, RUDO_ABI, "_createRudo2", new object[0], xd, xd, xd);
         print(response);
     }
     public static async void MintShield()
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(SHIELD_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(SHIELD_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
         print(response);
     }
     public static async void MintPet()
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(PET_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(PET_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
         print(response);
     }
     public static async void MintWeapon()
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "_createTestEquipable", new object[0], xd, xd, xd);
         print(response);
     }
     public static async void SetWeapon(int rudoId, int weaponId)
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetWeapon", new object[2] { rudoId, weaponId }, xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetWeapon", new object[2] { rudoId, weaponId }, xd, xd, xd);
         print(response);
     }
     public static async void SetShield(int rudoId, int weaponId)
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetShield", new object[2] { rudoId, weaponId }, xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetShield", new object[2] { rudoId, weaponId }, xd, xd, xd);
         print(response);
     }
     public static async void SetPet(int rudoId, int weaponId)
     {
         var xd = new HexBigInteger(0);
-        string response = await MoralisInterface.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetPet", new object[2] { rudoId, weaponId }, xd, xd, xd);
+        string response = await Moralis.ExecuteContractFunction(WEAPON_CONTRACT_ADDRESS, EQUIPABLE_ABI, "SetPet", new object[2] { rudoId, weaponId }, xd, xd, xd);
         print(response);
     }
 
@@ -215,26 +232,27 @@ public class CustomMainMenuScript : MonoBehaviour
     {
         header.SetActive(!header.activeSelf);
     }
-
-    public async void Authoentificate()
+    public async void Authentication_OnConnect()
     {
-        // If the user is still logged in just show game.
-        if (MoralisInterface.IsLoggedIn())
-        {
-            Debug.Log("User is already logged in to Moralis.");
-            connectWalletMenu.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("User is not logged in.");
-#if UNITY_ANDROID || UNITY_IOS
-        walletConnect.OpenDeepLink();
-#elif UNITY_WEBGL
-        await menuScript.LoginWithWeb3();
-#else
-            qrMenu.SetActive(true);
-            qrMenu.GetComponentInChildren<WalletConnectQRImage>().WalletConnectOnConnectionStarted();
-#endif
-        }
+        authenticationKitObject.SetActive(false);
+        connectMenu.SetActive(false);
+        LoadBalance();
+    }
+    public async void LoadBalance()
+    {
+        double balance = 0.0;
+        NativeBalance balanceResponse = (await Moralis.Web3Api.Account.GetNativeBalance((await Moralis.GetUserAsync()).ethAddress, Moralis.CurrentChain.EnumValue));
+        string sym = Moralis.CurrentChain.Symbol;
+        float decimals = Moralis.CurrentChain.Decimals * 1.0f;
+        double.TryParse(balanceResponse.Balance, out balance);
+        maticBalance.text = string.Format("{0:0.####} {1}", (balance / (double)Mathf.Pow(10.0f, decimals)), sym);
+    }
+
+    public void LogoutButton_OnClicked()
+    {
+        // Logout the Moralis User.
+        authKit.Disconnect();
+
+        authenticationKitObject.SetActive(true);
     }
 }
