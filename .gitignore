@@ -60,6 +60,12 @@ sysinfo.txt
 *.aab
 *.unitypackage
 *.app
+*.zip
+*.rar
+
+# Debugger and local tooling artifacts
+.vsdbg/
+**/.vsdbg/
 
 # Crashlytics generated file
 crashlytics-build.properties

@@ -16,8 +16,12 @@ import "./RudoPet.sol";
 import "./RudoShield.sol";
 
 contract Rudo is ERC721Enumerable, SetupRandom, RudoAccessControl {
+  uint64 private constant CHAINLINK_VRF_SUBSCRIPTION_ID = 198;
+  uint32 private constant DEFAULT_CALLBACK_GAS_LIMIT = 1800000;
+  uint16 private constant DEFAULT_REQUEST_CONFIRMATIONS = 3;
+
   constructor(address accessVariables, address weapons, address pets, address shields,string memory _name, string memory _symbol)
-    SetupRandom(198)
+    SetupRandom(CHAINLINK_VRF_SUBSCRIPTION_ID)
     ERC721(_name, _symbol)
     RudoAccessControl(accessVariables)
   {
@@ -27,9 +31,9 @@ contract Rudo is ERC721Enumerable, SetupRandom, RudoAccessControl {
     SetShieldContract(shields);
   }
 
-  uint32 callbackGasLimit = 1800000; //careXD
-  uint16 requestConfirmations = 3;
-  mapping(uint256 => string) public requestToCharacterName;//try to reduce mappings by making them the same value type?
+  uint32 callbackGasLimit = DEFAULT_CALLBACK_GAS_LIMIT;
+  uint16 requestConfirmations = DEFAULT_REQUEST_CONFIRMATIONS;
+  mapping(uint256 => string) public requestToCharacterName;
   //LEVELS
   uint32[] experienceRequiered = [4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40];
   //NATURES
@@ -49,11 +53,11 @@ contract Rudo is ERC721Enumerable, SetupRandom, RudoAccessControl {
   struct RudoStruct {
     string name;
     uint16 level;
-    uint32 experience;//uint32?
+    uint32 experience;
     uint16 nature;
     RudoStats stats;
     uint16[] skills;
-    bool nextSkillsReady; //implement
+    bool nextSkillsReady;
     LevelIncreaseChoise[3] nextSkills;
     int32 elo;
     EquipableSlot pet;

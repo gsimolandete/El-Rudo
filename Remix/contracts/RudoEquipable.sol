@@ -13,8 +13,12 @@ import "./SetupRandom.sol";
 import "./RudoAccessControl.sol";
 
 abstract contract RudoEquipable is ERC721Enumerable, SetupRandom, RudoAccessControl {
+  uint64 private constant CHAINLINK_VRF_SUBSCRIPTION_ID = 198;
+  uint32 private constant DEFAULT_CALLBACK_GAS_LIMIT = 1800000;
+  uint16 private constant DEFAULT_REQUEST_CONFIRMATIONS = 3;
+
   constructor(address addr, string memory _name, string memory _symbol)
-    SetupRandom(198)
+    SetupRandom(CHAINLINK_VRF_SUBSCRIPTION_ID)
     ERC721(_name, _symbol)
     RudoAccessControl(addr)
     {
@@ -37,8 +41,8 @@ abstract contract RudoEquipable is ERC721Enumerable, SetupRandom, RudoAccessCont
 
     uint256 COUNTER=0;
 
-    uint32 callbackGasLimit = 1800000; //careXD
-    uint16 requestConfirmations = 3;
+    uint32 callbackGasLimit = DEFAULT_CALLBACK_GAS_LIMIT;
+    uint16 requestConfirmations = DEFAULT_REQUEST_CONFIRMATIONS;
 
     function IsEquiped(uint256 equipableId) public view returns (bool){
         return equipables[equipableId].equiped;

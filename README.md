@@ -1,43 +1,64 @@
 # El Rudo
-UOC TFG
 
-Instruccions per a jugar:
+El Rudo is an open source Unity and Web3 game prototype where players mint,
+equip, and battle NFT characters called Rudos. The repository combines a Unity
+client, Solidity contracts, Moralis cloud functions, and AWS Lambda combat
+logic.
 
-Preparar moneder:
+## Repository Layout
 
-La instal·lació serà feta en Windows 10 amb Google Chrome.
-1.  Instal·lar Chrome: https://www.google.com/intl/es_es/chrome/
-2.  Instal·lar Metamask: https://metamask.io/download/
-3.  Clicar l’extensió de Metamask en Chrome a dalt a la dreta.
-4.  Crear un nou moneder o connectar-se a un existent. Si es crea una compte es te que crear una contrasenya per a poder manipular el teu moneder des de Metamask i guardar la clau privada de la compte. 
-5.  Afegir la Blockchain de Mumbai Polygon: 
-6. Clicar a l’extensió de Metamask.
-7. Clicar a dalt a la dreta de la finestra de Metamask i obrir un menú.
-8. Seleccionar configuració.
-9. Seleccionar xarxes.
-10. Afegir una xarxa amb les següents característiques:
-*   Nom de xarxa: Mumbai
-*   URL de RPC (segons el dia no funciona i es te que posar un altre, elegir un): 
-*   https://rpc-mumbai.matic.today 
-*   https://matic-mumbai.chainstacklabs.com 
-*   ID de cadena: 80001
-*   Símbol: MATIC
-*   URL del Explorador de blocs: https://explorer.matic.network/
-11.  Seleccionar la Blockchain de Mumbai.
-12.  Reclamar 1 MATIC:
-13.  Obrir la finestra de Metamask.
-14.  Copiar l’adreça clicant en la compte per a copiar-la.
-15. Reclamar MATIC a l’adreça copiada : https://mumbaifaucet.com/
+- `Unity/El Rudo`: Unity 2021.2.19f1 game client.
+- `Remix/contracts`: Solidity contracts for Rudos, equipable items, gameplay,
+  access control, and Chainlink VRF randomness.
+- `Moralis/cloudfunctions`: cloud handlers for blockchain events and gameplay
+  updates.
+- `AWS/lambda-dotnetcore3.1`: serverless C# combat/backend logic.
 
+## Current Status
 
-Per a arribar a veure gestionar un Rudo i fer que combati contra un altre cal fer:
-1.	Elegir la Xarxa de la Blockchain de Mumbai en Metamask.
-2.	Connectar moneder donant clic i acceptant notificacions de Metamask.
-3.	Anar a la tenda.
-4.	Mintejar un Rudo i opcionalment altres equipaments.
-5.	Tornar al menú principal i veure el Rudo creat en la finestra de “Perfil”.
-6.	Clicar en el botó “+info” per a veure tots els detalls i poder equipar armes, escuts o mascotes. També es pot comprar experiència i pujar de nivell (amb 4,6,8 de exp..).
-7.	Tornar al menú principal i clicar en “Play” i posteriorment clicar en “Friendly Duel”.
-8.	A dalt a la esquerra elegir el teu Rudo i després escriure la id del Rudo contra el que vols lluitar i premer “Start Combat” (Es pot elegir a partir del 9, sempre elegint un que existeixi, es recomana elegir el 9).
+The project is maintained as a playable prototype and reference implementation
+for Unity-based Web3 game flows. The original demo targeted Polygon Mumbai,
+which has since been deprecated; new deployments should use a currently
+supported Polygon testnet and update RPC, faucet, and explorer settings before
+publishing a build.
 
+## Requirements
 
+- Unity 2021.2.19f1.
+- Google Chrome or another wallet-compatible browser.
+- MetaMask or a compatible injected wallet.
+- Solidity tooling compatible with `pragma solidity ^0.8.12`.
+- OpenZeppelin and Chainlink contract dependencies for contract compilation.
+- Optional: AWS SAM CLI and .NET tooling for the Lambda project.
+
+## Gameplay Flow
+
+1. Connect a wallet in the Unity WebGL build.
+2. Open the shop and mint a Rudo.
+3. Optionally mint weapons, shields, or pets.
+4. Open the profile screen to inspect the Rudo and equip items.
+5. Start a friendly duel by selecting your Rudo and entering an opponent Rudo id.
+
+## Development Notes
+
+- Do not commit wallet private keys, API keys, generated builds, debugger
+  binaries, or local Unity cache folders.
+- Smart contract changes should keep SPDX headers and be reviewed before
+  deployment.
+- Backend and contract changes should include clear manual test notes until
+  automated test coverage is expanded.
+
+## Releases
+
+Historical releases include an early desktop build and a WebGL demo link. New
+releases should document the target network, contract addresses, Unity version,
+and manual verification steps.
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE`.
+
+## Maintenance Note
+
+Repository hygiene, documentation, and a small maintainability refactor were
+reviewed with OpenAI Codex to make future contributions easier to evaluate.
